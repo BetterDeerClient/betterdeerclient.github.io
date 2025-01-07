@@ -296,6 +296,7 @@
 			<button onclick="document.getElementById('ms-msg').value = '@Sb4bot wawameter <showlb: yes|no> [member: (username)]'; switchScene('main-scene')">Wawameter</button>
 		</div>
 		</div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.0/purify.min.js"></script>
 	<script>
 // hello guys gals and gays!
 // keep in mind that like rome, this was infact not built in a day*
@@ -959,7 +960,7 @@ function parseAllMarkdown() {
 	divs.forEach((div) => {
 		const post = div.querySelector('#ms-post-content');
 		if (post) {
-			let html = post.innerHTML.replace(/"/g, "&quot;").replace(/'/g, "&#039;").replace(/`/g, "&#x60;").replace(/</g, "&lt;").replace(/>/, "&gt;");
+			let html = DOMPurify.sanitize(post.innerHTML);
 			regexs.forEach(([regex, sub]) => {
 				html = html.replace(regex, sub);
 			})
@@ -1143,7 +1144,7 @@ document.addEventListener("visibilitychange", () => {
 document.addEventListener("paste", (event) => {
 	navigator.permissions.query({name: "clipboard-read"}).then((result) => {
 		if (result.state !== 'denied') {
-            navigator.clipboard.readText().then((text) => {document.getElementById("ms-msg").value = text.replaceAll("\n", "\\n")});
+            navigator.clipboard.readText().then((text) => {document.getElementById(event.target.id).value = text.replaceAll("\n", "\\n")});
 			if (!localStorage.getItem("paste-reminder")) {
 				displayWarning("Please note that pasting text in ANY text box will remove all previous text in that box. Make sure you save all other text first!");
 				localStorage.setItem("paste-reminder", true)
