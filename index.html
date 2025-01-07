@@ -960,7 +960,7 @@ function parseAllMarkdown() {
 	divs.forEach((div) => {
 		const post = div.querySelector('#ms-post-content');
 		if (post) {
-			let html = DOMPurify.sanitize(post.innerHTML);
+			let html = DOMPurify.sanitize(post.innerHTML).replace(/style=/g, "");
 			regexs.forEach(([regex, sub]) => {
 				html = html.replace(regex, sub);
 			})
