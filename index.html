@@ -87,7 +87,6 @@
 				margin-right: 8px;
 				margin-top: 2px;
 				border: 2px #383531 solid;
-				box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.75);
 			}
 			.reply-pfp {
 				border-radius: 100%;
@@ -189,6 +188,7 @@
 			<button onclick="register();">Register</button><br><br>
 			<small>(You will need to provide an invite code when registering.)<br>Read these guidelines first.</small><br>
 			<pre style="word-wrap: break-word;">Don't spam (includes large text walls and fast messages),<br>create bot accounts without permission,<br>reveal others' information (doxxing),<br>harass or discriminate others,<br>post inappropriate or stolen media,<br>post viruses (and things of the like),<br>threaten anyone's life,<br>evade bans,<br>or try to access accounts that aren't yours.<br>Mods can take action for any reason, but you can submit an appeal to the system admin.</pre><br>
+			<small>You may read the full (but harder-to-read) version <a href="https://deer.meltland.dev/GUIDELINES.txt">here</a>.</small><br>
 			<small id="rl-version"></small><br><br>
 			<small><a href="https://speedbee411.neocities.org">Don't know what this is?</a></small>
 		</center></div>
@@ -230,6 +230,7 @@
 			<button onclick="updateStg('post_color');">Set Post Background Color</button><br>
 			<input id="mc-button-color" type="color" value="#ffffff">
 			<button onclick="updateStg('button_color');">Set Button Color</button><br>
+			<button id="mc-glow" onclick="updateStg('glow')">Unable to get picture glow setting</button><br>
 			<h2><b>Notifications</b></h2>
 			<button id="mc-msg-notif" onclick="updateStg('msg_notif')">Unable to get message notification setting</button><br>
 			<button id="mc-reply-notif" onclick="updateStg('reply_notif')">Unable to get reply notification setting</button><br>
@@ -342,6 +343,7 @@ let markdown = false;
 let msg_notif = false;
 let mention_notif = false;
 let reply_notif = false;
+let glow = false;
 let text_replacements = {
 	"\\n": "\n",
 	":x:": "❌",
@@ -355,7 +357,7 @@ let text_replacements = {
 	":o:": "🅾️",
 	":ab:": "🆎"
 };
-const settings_template = {"replace_text": true, "markdown": true, bg_color: "#2e2d2b", post_color: "#403d39", button_color: "#ede4d5", msg_notif: false, reply_notif: true, mention_notif: true}
+const settings_template = {"replace_text": true, "markdown": true, bg_color: "#2e2d2b", post_color: "#403d39", button_color: "#ede4d5", msg_notif: false, reply_notif: true, mention_notif: true, glow: true}
 
 if (localStorage.getItem("settings") == null) {
 	localStorage.setItem("settings", JSON.stringify(settings_template))
@@ -391,6 +393,13 @@ function stgsTriggers() {
 		} else {
 			markdown = false;
 			document.getElementById("mc-button-markdown").innerHTML = "Markdown OFF";
+		};
+		if (settings.glow) {
+			glow = true;
+			document.getElementById("mc-glow").innerHTML = "<b>Pictures glow</b>";
+		} else {
+			glow = false;
+			document.getElementById("mc-glow").innerHTML = "Pictures don't glow";
 		};
 		if (settings.bg_color) {
 			document.body.style.backgroundColor = settings.bg_color;
@@ -446,6 +455,13 @@ function updateStg(setting) {
 				settings.replace_text = false;
 			} else {
 				settings.replace_text = true;
+			};
+			break;
+		case "glow":
+			if (settings.glow) {
+				settings.glow = false;
+			} else {
+				settings.glow = true;
 			};
 			break;
 		case "bg_color":
@@ -798,6 +814,9 @@ function loadPost(resf, isFetch, isInbox) {
 	} else {
 		avatar.src = "https://deer.meltland.dev/default.jpeg";
 	};
+	if (glow) {
+		avatar.style.boxShadow = "0 0 10px 5px rgba(255, 255, 255, 0.75)";
+	}
 	avatar.setAttribute("onerror", "this.src = 'https://deer.meltland.dev/default.jpeg';")
 	avatar.setAttribute("onclick", `showUser("${resf.author.username}");`);
 	avatar.classList.add("clickable");
@@ -940,7 +959,7 @@ function parseAllMarkdown() {
 	divs.forEach((div) => {
 		const post = div.querySelector('#ms-post-content');
 		if (post) {
-			let html = post.innerHTML;
+			let html = post.innerHTML.replace(/"/g, "&quot;").replace(/'/g, "&#039;").replace(/`/g, "&#x60;").replace(/</g, "&lt;").replace(/>/, "&rt;");
 			regexs.forEach(([regex, sub]) => {
 				html = html.replace(regex, sub);
 			})
