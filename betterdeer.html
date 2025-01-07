@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en-US">
+	<head>
+		<title>BetterDeer v1</title>
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<meta charset="UTF-8">
+		<style>
+			@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+			body {
+				font-family: 'Noto Sans', sans-serif;
+				margin: 0px;
+				background-color: #2e2d2b;
+				color: #ede4d5;
+				color-scheme: dark;
+			}
+			button {
+				background-color: #ede4d5;
+				color: #2e2d2b;
+				border: none;
+				border-radius: 10px;
+				padding: 9px;
+				font-family: 'Noto Sans', sans-serif;
+				margin: 4px;
+			}
+			button:hover {
+				background-color: #403d39 !important;
+				color: #ede4d5;
+				cursor: pointer;
+			}
+			input {
+				background-color: #ede4d5;
+				color: #403d39;
+				border: none;
+				border-radius: 10px;
+				padding: 9px;
+				font-family: 'Noto Sans', sans-serif;
+				margin: 4px;
+			}
+			.scene {
+				margin: 8px;
+			}
+			#error-bar {
+				color: #2e2d2b;
+				width: 100%;
+				border-radius: 4px;
+				padding: 9px;
+				box-sizing: border-box;
+				position: fixed;
+			}
+			.text-clickable {
+				text-decoration: underline;
+				cursor: pointer;
+			}
+			.clickable {
+				cursor: pointer;
+			}
+			.hidden {
+				display: none;
+			}
+			.post {
+				background-color: #403d39;
+				padding: 9px;
+				border-radius: 10px;
+				margin: 8px;
+				word-break: break-word;
+				overflow-wrap: break-word;
+				box-sizing: border-box;
+				width: 100%;
+			}
+			.mono {
+				font-family: monospace;
+			}
+			#ms-msg {
+				width:60vw;
+				box-sizing: border-box;
+				word-wrap: break-word;
+			}
+			#ms-button-post {
+				box-sizing: border-box;
+			}
+			.pfp {
+				border-radius: 100%;
+				width: 36px;
+				height: 36px;
+				float: left;
+				margin-right: 8px;
+				margin-top: 2px;
+				border: 2px #383531 solid;
+				box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.75);
+			}
+			.reply-pfp {
+				border-radius: 100%;
+				width: 15px;
+				height: 15px;
+				float: left;
+				border: 1px #383531 solid;
+				box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.75);
+			}
+			.album-cover {
+				border-radius: 10px;
+				width: 62px;
+				height: 62px;
+				float: left;
+				margin-right: 8px;
+				margin-top: 1px;
+				border: 2px #383531 solid;
+			}
+			#user-display {
+				position: fixed;
+				top: 10%;
+				left: 5%;
+				width: 90%;
+				height: 70%;
+				background-color: rgba(0, 0, 0, 0.8);
+				padding: 20px;
+				z-index: 1000;
+			}
+			#ud-lastfm-container {
+				width: 80%;
+				background-color: #403d39;
+				padding: 9px;
+				border-radius: 10px;
+				margin: 8px;
+				word-break: break-word;
+				overflow-wrap: break-word;
+				box-sizing: border-box;
+			}
+			#ud-bio-container {
+				width: 80%;
+				background-color: #403d39;
+				padding: 9px;
+				border-radius: 10px;
+				margin: 8px;
+				word-break: break-word;
+				overflow-wrap: break-word;
+				box-sizing: border-box;
+			}
+			a {
+				color: #ede4d5;
+			}
+			.attachment {
+				margin-left:4px;
+				margin-right:4px;
+				max-height:25vw;
+				max-width:25vw;
+				width:auto;
+				height:auto;
+			}
+			.rl-guidelines {
+				background-color: #ede4d5;
+				color: black;
+				border: none;
+				border-radius: 10px;
+				padding: 9px;
+				font-family: serif;
+				margin: 4px;
+				width: 90vw;
+			}
+			.reply {
+				color: #ede4d5;
+			}
+			#command-picker {
+				position: fixed;
+				top: 10%;
+				left: 5%;
+				width: 90%;
+				height: 70%;
+				background-color: rgba(0, 0, 0, 0.8);
+				padding: 20px;
+				z-index: 1000;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="error-bar" style="background-color: lime;"><span onclick="closeErrors();" class="text-clickable" style="float: right; font-size: 2em;"><b>×</b></span><span id="error-text">Loading...</span></div>
+		<div class="scene">
+		<div id="loading"><center>Taking too long to load? Try <span onclick="logOut();" class="text-clickable">a full reset</span>.</center></div>
+		<div id="connection-lost" class="hidden">
+			<center>Connection was lost.<br>
+			<span onclick="window.location.reload();" class="text-clickable">Reload</span>.<br><br>
+			<small><a href="https://status.uptime-monitor.io/675625ba72974e1ee251f1f3">Status page</a></small></center>
+		</div>
+		<div id="register-login" class="hidden"><center>
+			<input id="rl-username" placeholder="Username..." type="text" maxlength=20><br>
+			<input id="rl-password" placeholder="Password..." type="password"><br>
+			<input id="rl-invitecode" placeholder="Invite code..." type="text" maxlength=16><br>
+			<button onclick="logIn();">Log in</button> 
+			<button onclick="register();">Register</button><br><br>
+			<small>(You will need to provide an invite code when registering.)<br>Read these guidelines first.</small><br>
+			<pre style="word-wrap: break-word;">Don't spam (includes large text walls and fast messages),<br>create bot accounts without permission,<br>reveal others' information (doxxing),<br>harass or discriminate others,<br>post inappropriate or stolen media,<br>post viruses (and things of the like),<br>threaten anyone's life,<br>evade bans,<br>or try to access accounts that aren't yours.<br>Mods can take action for any reason, but you can submit an appeal to the system admin.</pre><br>
+			<small id="rl-version"></small><br><br>
+			<small><a href="https://speedbee411.neocities.org">Don't know what this is?</a></small>
+		</center></div>
+		<div id="main-scene" class="hidden">
+			<button id="ms-name" onclick="document.querySelector('#ms-dropdown').classList.toggle('hidden')">@...</button> | <button onclick="switchScene('main-inbox');" id="ms-button-inbox">Inbox</button><br>
+			<div id="ms-dropdown" class="hidden">
+				<button onclick="showUser(username);">View Profile</button>
+				<button onclick="switchScene('main-config');">Settings</button>
+				<button id="ms-button-mod" class="hidden" onclick="switchScene('main-moderation');">Moderation</button>
+				<button onclick="logOut();">Log out</button>
+			</div>
+			<small id="ms-ulist">0 users online ()</small><br><br>
+			<center>
+				<button onclick="addAttachment();">Attach URL</button>
+				<button onclick="addUpload();">Upload File</button>
+				<button onclick="switchScene('command-picker')">Command Picker</button>
+				<input id="ms-msg" maxlength="2500" onforminput="textinput();" autocomplete="off" onkeydown="if (event.keyCode == 13) {if (event.shiftKey) {document.getElementById('ms-msg').value += '\\n'} else if (document.getElementById('ms-msg').value.length > 0) {sendPost()}}" placeholder="Enter post contents here..." type="text">
+				<button id="ms-button-post" onclick="sendPost();">Post</button><br>
+				<small id="ms-details"></small>
+			</center><br>
+			<div id="ms-posts"></div>
+			<input class="hidden" id="ms-attach" onchange="attachFile();" multiple="true" type="file">
+		</div>
+		<div id="main-config" class="hidden">
+			<button onclick="switchScene('main-scene');">Close Settings</button><br>
+			<h2><b>Profile</b></h2>
+			<input id="mc-display-name" placeholder="Display name..." type="text" maxlength=20>
+			<button onclick="setDisplayName();">Set display name</button><br>
+			<input id="mc-avatar" placeholder="Avatar URL..." type="text" maxlength=656>
+			<button onclick="setAvatar();">Set avatar URL</button><br>
+			<input id="mc-bio" placeholder="Bio..." type="text" maxlength=512>
+			<button onclick="setBio();">Set bio</button><br>
+			<input id="mc-lastfm" placeholder="Last.fm..." type="text" maxlength=72>
+			<button onclick="setLastfm();">Set last.fm</button>
+			<h2><b>BetterDeer</b></h2>
+			<input id="mc-bg-color" type="color" value="#2e2d2b">
+			<button onclick="updateStg('bg_color');">Set Background Color</button><br>
+			<input id="mc-post-color" type="color" value="#403d39">
+			<button onclick="updateStg('post_color');">Set Post Background Color</button><br>
+			<input id="mc-button-color" type="color" value="#ffffff">
+			<button onclick="updateStg('button_color');">Set Button Color</button><br>
+			<h2><b>Notifications</b></h2>
+			<button id="mc-msg-notif" onclick="updateStg('msg_notif')">Unable to get message notification setting</button><br>
+			<button id="mc-reply-notif" onclick="updateStg('reply_notif')">Unable to get reply notification setting</button><br>
+			<button id="mc-mention-notif" onclick="updateStg('mention_notif')">Unable to get mention notification setting</button><br>
+			<h2><b>Misc</b></h2>
+			<button id="mc-button-markdown" onclick="updateStg('markdown')">Unable to get markdown setting</button><br>
+			<button id="mc-button-replace" onclick="updateStg('replace_text')">Unable to get text replacement setting</button><br><br>
+			<button onclick="for (const i in settings_template) {settings[i] = settings_template[i]}; localStorage.setItem('settings', JSON.stringify(settings)); stgsTriggers();">Revert to Default Settings</button><br>
+			<small id="mc-version"></small>
+		</div>
+		<div id="main-inbox" class="hidden">
+			<button onclick="switchScene('main-scene');">Close Inbox</button><br>
+			<h2>Inbox</h2>
+			<div id="mi-posts"></div>
+		</div>
+		<div id="main-moderation" class="hidden">
+			<button onclick="switchScene('main-scene');">Close Moderation</button><br>
+			<h2><b>Ban (Prevents users from logging in)</b></h2>
+			<label for="mm-username-ban">Username:</label><input id="mm-username-ban" placeholder="Username..." type="text"><br>
+			<label for="mm-until-ban">Lasts until:</label><input id="mm-until-ban" type="datetime-local"><br>
+			<label for="mm-reason-ban">Reason:</label><input id="mm-reason-ban" placeholder="Reason..." type="text"><br>
+			<button onclick="ban();">Ban User</button>
+			<h2><b>Invites (allow someone to join SoktDeer)</b></h2>
+			<span id="mm-invite-code">Your invite code is "".</span><br>
+			<button onclick="genInviteCode();">Generate</button><br>
+			<button onclick="resetInvites();">Revoke all</button>
+			<h2><b>Clear home (permanently delete all home posts)</b></h2>
+			<button onclick="clearHome();">Clear home</button>
+			<h2><b>Kick (force someone to log out)</b></h2>
+			<label for="mm-username-forcekick">Username:</label><input id="mm-username-forcekick" placeholder="Username..." type="text"><br>
+			<button onclick="forceKick();">Kick</button>
+			<h2><b>Inbox posting</b></h2>
+			<label for="mm-content-inbox">Message:</label><input id="mm-content-inbox" placeholder="Message..." type="text" width=80><br>
+			<button onclick="postInbox();">Post inbox</button>
+		</div>
+		<div id="user-display" class="hidden">
+			<button style="float: right; padding: 10px; border-radius: 4px;" onclick="switchScene('main-scene');">✖</button><br>
+			<img id="ud-avatar" class="pfp" src="https://deer.meltland.dev/default.jpeg" onerror="this.src = 'https://deer.meltland.dev/default.jpeg'">
+			<span id="ud-display-name"></span><br>
+			<span id="ud-username" class="mono"></span><br>
+			<small id="ud-created"></small><br>
+			<small id="ud-level"></small><br>
+			<button id="ud-permissions" onclick="document.getElementById('ud-permissions2').classList.toggle('hidden')"><b>Permissions</b></button><br> <!-- "no br here!!" nuh uh bitch there's gonna be a fucking br there whether you like it or not-->
+			<span id="ud-permissions2" class="hidden"></span>
+			<small id="ud-special"></small><br>
+			<span id="ud-banned" class="hidden"><small id="ud-banned-span"></small><br></span>
+			<div id="ud-bio-container" style="float: inline-start"><b>Bio</b><br><span id="ud-bio">No bio</span></div>
+			<div id="ud-lastfm-container" style="float: inline-end">
+				<img id="ud-lastfm-cover" class="album-cover" src="https://deer.meltland.dev/default.jpeg" onerror="this.src = 'https://deer.meltland.dev/default.jpeg'">
+				<span id="ud-lastfm-name"></span><br>
+				<span id="ud-lastfm-artist"></span><br>
+				<small id="ud-lastfm-album"></small>
+			</div>
+		</div>
+		<div id="command-picker" class="hidden">
+			<button style="float: right; padding: 10px; border-radius: 4px;" onclick="switchScene('main-scene')">✖</button>
+			<h1>Command Picker</h1>
+			<span>Commands from bots that use deerbot.py are listed here.</span><hr>
+			<h2>Sb4bot</h2>
+			<button onclick="document.getElementById('ms-msg').value = '@Sb4bot help'; switchScene('main-scene')">Detailed command info</button>
+			<button onclick="document.getElementById('ms-msg').value = '@Sb4bot rps <choice: rock|paper|scissors>'; switchScene('main-scene')">Rock paper scissors</button>
+			<button onclick="document.getElementById('ms-msg').value = '@Sb4bot rng [optional seed message]'; switchScene('main-scene')">RNG</button>
+			<button onclick="document.getElementById('ms-msg').value = '@Sb4bot wawameter <showlb: yes|no> [member: (username)]'; switchScene('main-scene')">Wawameter</button>
+		</div>
+		</div>
+	<script>
+// hello guys gals and gays!
+// keep in mind that like rome, this was infact not built in a day*
+// so please dont judge so much!
+
+// let us commence and define the lame shit here
+
+document.getElementById("rl-username").value = "";
+document.getElementById("rl-password").value = "";
+document.getElementById("rl-invitecode").value = "";
+
+function displayError (errText) {
+	document.getElementById("error-text").innerText = errText;
+	document.getElementById("error-bar").classList.remove("hidden");
+	if (!errText.includes("Loading")) {
+		document.getElementById("error-bar").style.backgroundColor = "#f20109";
+	} else {
+		document.getElementById("error-bar").style.backgroundColor = "lime";
+	};
+};
+
+function displayWarning (errText) {
+	document.getElementById("error-text").innerText = errText;
+	document.getElementById("error-bar").classList.remove("hidden");
+	document.getElementById("error-bar").style.backgroundColor = "#f26201";
+};
+
+function closeErrors () {
+	document.getElementById("error-bar").classList.add("hidden");
+};
+
+const version = "1.4.1b";
+const serverVersion = "SOKTDEER-2024.12.01-15.11";
+let last_cmd = "";
+let username = "";
+let logged_in = false;
+let scene = "loading";
+let ulist = [];
+let posts = [];
+let replies = [];
+let attachments = [];
+
+let replace_text = false;
+let markdown = false;
+let msg_notif = false;
+let mention_notif = false;
+let reply_notif = false;
+let text_replacements = {
+	"\\n": "\n",
+	":x:": "❌",
+	":+1:": "👍",
+	":-1:": "👎",
+	":check:": "✅",
+	":nerd:": "🤓",
+	":nerd2:": "☝️🤓",
+	":a:": "🅰️",
+	":b:": "🅱️",
+	":o:": "🅾️",
+	":ab:": "🆎"
+};
+const settings_template = {"replace_text": true, "markdown": true, bg_color: "#2e2d2b", post_color: "#403d39", button_color: "#ede4d5", msg_notif: false, reply_notif: true, mention_notif: true}
+
+if (localStorage.getItem("settings") == null) {
+	localStorage.setItem("settings", JSON.stringify(settings_template))
+};
+
+if (localStorage.getItem("last_inbox_id") == null) {
+	localStorage.setItem("last_inbox_id", 0)
+};
+
+let settings = JSON.parse(localStorage.getItem("settings"));
+
+// new field thingy automaticinator #PurgecoreForever
+
+for (const i in settings_template) {
+	if (!i in settings) {
+		settings[i] = settings_template[i]
+		localStorage.setItem("settings", JSON.stringify(settings))
+	}
+}
+
+function stgsTriggers() {
+	try {
+		if (settings.replace_text) {
+			replace_text = true;
+			document.getElementById("mc-button-replace").innerHTML = "<b>Text replacement ON</b>";
+		} else {
+			replace_text = false;
+			document.getElementById("mc-button-replace").innerHTML = "Text replacement OFF";
+		};
+		if (settings.markdown) {
+			markdown = true;
+			document.getElementById("mc-button-markdown").innerHTML = "<b>Markdown ON</b>";
+		} else {
+			markdown = false;
+			document.getElementById("mc-button-markdown").innerHTML = "Markdown OFF";
+		};
+		if (settings.bg_color) {
+			document.body.style.backgroundColor = settings.bg_color;
+		};
+		if (settings.post_color) {
+			document.querySelectorAll(".post").forEach((e) => {
+				e.style.backgroundColor = settings.post_color;
+			});
+			document.querySelector("#ms-dropdown").style.backgroundColor = settings.post_color;
+		};
+		if (settings.button_color) {
+			document.querySelectorAll("button").forEach((e) => {
+				e.style.backgroundColor = settings.button_color;
+			});
+		};
+		if (settings.msg_notif) {
+			msg_notif = true;
+			document.getElementById("mc-msg-notif").innerHTML = "<b>Notifications on message</b>";
+		} else {
+			msg_notif = false;
+			document.getElementById("mc-msg-notif").innerHTML = "No notifications on message";
+		};
+		if (settings.reply_notif) {
+			reply_notif = true;
+			document.getElementById("mc-reply-notif").innerHTML = "<b>Notifications on reply</b>";
+		} else {
+			reply_notif = false;
+			document.getElementById("mc-reply-notif").innerHTML = "No notifications on reply";
+		};
+		if (settings.mention_notif) {
+			mention_notif = true;
+			document.getElementById("mc-mention-notif").innerHTML = "<b>Notifications on mention</b>";
+		} else {
+			mention_notif = false;
+			document.getElementById("mc-mention-notif").innerHTML = "No notifications on mention";
+		};
+	} finally {
+		return;
+	}
+};
+
+function updateStg(setting) {
+	switch (setting) {
+		case "markdown":
+			if (settings.markdown) {
+				settings.markdown = false;
+			} else {
+				settings.markdown = true;
+			};
+			break;
+		case "replace_text":
+			if (settings.replace_text) {
+				settings.replace_text = false;
+			} else {
+				settings.replace_text = true;
+			};
+			break;
+		case "bg_color":
+			settings.bg_color = document.getElementById('mc-bg-color').value;
+			break;
+		case "post_color":
+			settings.post_color = document.getElementById('mc-post-color').value;
+			break;
+		case "button_color":
+			settings.button_color = document.getElementById('mc-button-color').value;
+			break;
+		case "msg_notif":
+			if (settings.msg_notif) {
+				settings.msg_notif = false;
+			} else {
+				settings.msg_notif = true;
+			};
+			break;
+		case "reply_notif":
+			if (settings.reply_notif) {
+				settings.reply_notif = false;
+			} else {
+				settings.reply_notif = true;
+			};
+			break;
+		case "msg_notif":
+			if (settings.msg_notif) {
+				settings.msg_notif = false;
+			} else {
+				settings.msg_notif = true;
+			};
+			break;
+		case "mention_notif":
+			if (settings.mention_notif) {
+				settings.mention_notif = false;
+			} else {
+				settings.mention_notif = true;
+			};
+			break;
+	};
+	localStorage.setItem("settings", JSON.stringify(settings));
+	stgsTriggers();
+};
+
+async function uploadFile(file) {
+	const data = new FormData();
+	data.set('reqtype', 'fileupload');
+	data.set('fileToUpload', file);
+	const init = {
+		method: 'POST',
+		body: data
+	};
+	const res = await fetch("https://catbox.moe/user/api.php", init);
+	const url = await res.text();
+	console.log(`uploaded to ${url}`)
+	if (url.includes("catbox.moe")) {
+		return url;
+	} else {
+		return 1n / 0n;
+	};
+};
+
+// whatever, go my ws shit
+
+const ws = new WebSocket("wss://sokt.meltland.dev") // i hate const!! grr!! >:(
+
+ws.onmessage = (event) => {
+	let incoming = JSON.parse(event.data);
+	console.log(incoming);
+	switch (incoming.command) {
+		case "greet":
+			closeErrors();
+			document.getElementById("rl-version").innerText = `${version} - ${incoming.version} | BETTERDEER v1`;
+			document.getElementById("mc-version").innerText = `${version} - ${incoming.version} | BETTERDEER v1`;
+			if (incoming.version != serverVersion) {
+				displayError(`The server is on a different version than the client. Be wary of issues while using the client. (Expected "${serverVersion}", got "${incoming.version}")`);
+			};
+			ulist = incoming.ulist;
+			var ulstring = "";
+			for (const i in ulist) {
+				ulstring += `<span class="clickable" onclick="showUser('${ulist[i]}');">${ulist[i]}</span>` // fuck i love bad practices!!
+				if (i != ulist.length - 1) {
+					ulstring += ", "
+				};
+			};
+			document.getElementById("ms-ulist").innerHTML = `${ulist.length} users online (${ulstring})`;
+			posts = incoming.messages;
+			for (const i in incoming.messages) {
+				loadPost(incoming.messages[i], true, false);
+			};
+			if (localStorage.getItem("username") == null || localStorage.getItem("token") == null) {
+				scene = "register-login";
+				document.getElementById("loading").classList.toggle("hidden");
+				document.getElementById("register-login").classList.toggle("hidden")
+			} else {
+				username = localStorage.getItem("username").toLowerCase();
+				last_cmd = "login_token";
+				ws.send(JSON.stringify({command: "login_token", username: username, token: localStorage.getItem("token")}))
+			};
+			stgsTriggers();
+		case "ulist":
+			ulist = incoming.ulist;
+			var ulstring = "";
+			for (const i in ulist) {
+				ulstring += `<span class="clickable" onclick="showUser('${ulist[i]}');">${ulist[i]}</span>` // fuck i love bad practices!!
+				if (i != ulist.length - 1) {
+					ulstring += ", "
+				};
+			};
+			document.getElementById("ms-ulist").innerHTML = `${ulist.length} users online (${ulstring})`;
+		};
+	if ("error" in incoming) {
+		if (incoming.error) {
+			if (incoming.code == "banned") {
+				displayError(`Account is banned until ${new Date(incoming.banned_until * 1000).toLocaleString()} for "${incoming.ban_reason}"`)
+			} else {
+				displayError(`Error: ${incoming.code} (${incoming.form})`);
+			};
+		} else if (last_cmd == "login_token" || last_cmd == "login_pswd") {
+			if (scene == "register-login") {
+				document.getElementById("register-login").classList.toggle("hidden");
+			} else if (scene == "loading") {
+				document.getElementById("loading").classList.toggle("hidden");
+			};
+			scene = "main-scene";
+			if ([JSON.stringify([]), JSON.stringify(["POST"])].includes(JSON.stringify(incoming.user.permissions))) {
+				document.getElementById("ms-button-mod").classList.add("hidden");
+			} else {
+				document.getElementById("ms-button-mod").classList.remove("hidden");
+			};
+			document.getElementById("main-scene").classList.toggle("hidden");
+			document.getElementById("ms-name").innerText = `@${username}`
+			last_cmd = "get_inbox"
+			ws.send(JSON.stringify({command: "get_inbox"}))
+		};
+	};
+	if ("token" in incoming && incoming.listener == "RegisterLoginPswdListener") {
+		localStorage.setItem("username", username);
+		localStorage.setItem("token", incoming.token);
+		if (last_cmd == "register") {
+			window.location.reload();
+		};
+		logged_in = true;
+	} else if (incoming.command == "new_post") {
+		loadPost(incoming.data, false, false);
+	} else if (last_cmd == "gen_invite" && "invite_code" in incoming) {
+		document.getElementById("mm-invite-code").innerText = `Your invite code is "${incoming.invite_code}". Use it on any SoktDeer client to sign up!\n\nAll available codes: ${incoming.invite_codes}`
+	} else if (last_cmd == "get_inbox" && "inbox" in incoming) {
+		document.getElementById("mi-posts").innerHTML = ""
+		for (const i in incoming.inbox) {
+			loadPost(incoming.inbox[i], true, true);
+		};
+		if (localStorage.getItem("last_inbox_id") != incoming.inbox[0].id) {
+			document.getElementById("ms-button-inbox").innerText = "Inbox*";
+			localStorage.setItem("last_inbox_id", incoming.inbox[0].id)
+		} else {
+			document.getElementById("ms-button-inbox").innerText = "Inbox";
+		};
+	} else if (last_cmd == "get_user" && "user" in incoming) {
+		var bio;
+		if (incoming.user.bio == "") {bio = "No bio"} else {bio = incoming.user.bio};
+		document.getElementById("ud-avatar").src = incoming.user.avatar;
+		document.getElementById("ud-display-name").innerHTML = `<b>${incoming.user.display_name}</b>`;
+		document.getElementById("ud-username").innerText = "@" + incoming.user.username;
+		document.getElementById("ud-created").innerText = `Created on ${new Date(incoming.user.created * 1000)}`;
+		let level = 0;
+		const permissions = ["POST", "INVITE", "INBOX", "CLEAR_HOME", "KICK", "BAN", "PROTECTED"];
+		let idx = 0;
+		for (let permission of permissions) {
+			if (incoming.user.permissions.includes(permission)) {
+				level += 2 ** idx;
+			};
+			idx += 1;
+		};
+		document.getElementById("ud-level").innerText = `Level ${level}`;
+		document.getElementById("ud-permissions2").innerHTML = `${incoming.user.permissions.toString().toLowerCase().replaceAll(",", "<br>")}`;
+		document.getElementById("ud-special").innerHTML = "";
+		if (incoming.user.verified) {
+			document.getElementById("ud-special").innerHTML += "<br>Verified user";
+		};
+		if (incoming.user.bot) {
+			document.getElementById("ud-special").innerHTML += "<br>Bot user";
+		};
+		if (["sb4bot"].includes(incoming.user.username)) {
+			document.getElementById("ud-special").innerHTML += "<br>Supports BetterDeer command picker";
+		};
+		if (incoming.user.username == "speedbee411") {
+			document.getElementById("ud-special").innerHTML += "<br>Creator of BetterDeer";
+		}
+		if (incoming.user.banned_until > new Date().getTime() / 1000) {
+			document.getElementById("ud-banned-span").innerText = `Banned until ${new Date(incoming.user.banned_until * 1000).toLocaleString()}`;
+			document.getElementById("ud-banned").classList.remove("hidden");
+		} else {
+			document.getElementById("ud-banned").classList.add("hidden");
+		};
+		document.getElementById("ud-bio").innerText = bio;
+		if (incoming.user.lastfm) {
+			document.getElementById("ud-lastfm-container").classList.add("hidden");
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var lfm = JSON.parse(xhttp.responseText);
+					if (!"track" in lfm) {
+						document.getElementById("ud-lastfm-container").classList.add("hidden");
+					} else if (lfm.track["@attr"] && lfm.track["@attr"].nowplaying) {
+						document.getElementById("ud-lastfm-container").classList.remove("hidden")
+						document.getElementById("ud-lastfm-cover").src = lfm.track.image[lfm.track.image.length - 1]["#text"];
+						document.getElementById("ud-lastfm-name").innerHTML = `<b>${lfm.track.name}</b>`;
+						document.getElementById("ud-lastfm-album").innerHTML = `on <b>${lfm.track.album["#text"]}</b>`;
+						document.getElementById("ud-lastfm-artist").innerHTML = `by <b>${lfm.track.artist["#text"]}</b>`;
+					} else {
+						document.getElementById("ud-lastfm-container").classList.add("hidden");
+					};
+				}
+			};
+			xhttp.open("GET", `https://lastfm-last-played.biancarosa.com.br/${incoming.user.lastfm}/latest-song`, true);
+			xhttp.send();
+		} else {
+			document.getElementById("ud-lastfm-container").classList.add("hidden")
+		};
+		switchScene('user-display');
+	};
+};
+
+ws.onclose = (event) => {
+	closeErrors();
+	console.log("ws connection closed");
+	switchScene("connection-lost");
+};
+
+ws.onerror = (event) => {
+	closeErrors();
+	console.log("ws error");
+	switchScene("connection-lost");
+};
+
+function switchScene (newScene) {
+	if (newScene == "main-inbox") {
+		last_cmd = "get_inbox"
+		ws.send(JSON.stringify({command: "get_inbox"}))
+	};
+	if (scene == "user-display") {
+		document.getElementById("ud-avatar").src = "https://deer.meltland.dev/default.jpeg";
+	};
+	if (!["user-display","command-picker"].includes(newScene)) {
+		document.getElementById(scene).classList.toggle("hidden");
+	};
+	if (!["user-display","command-picker"].includes(scene)) {
+		document.getElementById(newScene).classList.toggle("hidden");
+	};
+	scene = newScene;
+};
+
+function register() {
+	last_cmd = "register";
+	username = document.getElementById("rl-username").value.toLowerCase();
+	ws.send(JSON.stringify({command: "register", username: username, password: document.getElementById("rl-password").value, invite_code: document.getElementById("rl-invitecode").value, listener: "RegisterLoginPswdListener"}))
+};
+
+function logIn() {
+	last_cmd = "login_pswd";
+	username = document.getElementById("rl-username").value.toLowerCase();
+	ws.send(JSON.stringify({command: "login_pswd", username: username, password: document.getElementById("rl-password").value, listener: "RegisterLoginPswdListener"}))
+};
+
+function logOut() {
+	localStorage.clear();
+	window.location.reload();
+};
+
+function notify(msg, title) {
+	const notification = new Notification(title, {
+		body: msg,
+		vibrate: [200, 100, 200]
+	});
+	notification.onclick = () => {
+		window.open("https://betterdeerclient.github.io/betterdeer.html");
+	};
+}
+
+function loadPost(resf, isFetch, isInbox) {
+	console.log("Loading post " + resf.id)
+	var tsr = resf.created
+	var tsra = tsr * 1000
+	var tsrb = Math.trunc(tsra)
+	var ts = new Date();
+	ts.setTime(tsrb);
+	var sts = ts.toLocaleString();
+	if (!(isFetch || (resf.author.username == localStorage.getItem("username").toLowerCase()) || resf.content.includes("@" + localStorage.getItem("username").toLowerCase()) || isInbox)) {
+		if (document.visibilityState == "hidden") {
+			document.title = "(!) BetterDeer v1";
+		};
+		if (settings.msg_notif) {
+			if (Notification.permission === "granted") {
+				notify(resf.content, "New message");
+			} else if (Notification.permission !== "denied") {
+				Notification.requestPermission().then(permission => {
+					if (permission === "granted") {
+						notify(resf.content, "New message");
+					};
+				});
+			};
+		};
+	};
+	var replies_loaded = "";
+	for (const i in resf.replies) {
+		replies_loaded += `<img class="reply-pfp" src="${resf.replies[i].author.avatar}"> <b style="cursor: pointer;" onclick="showUser('${resf.replies[i].author.username}')">${resf.replies[i].author.username}</b> ${resf.replies[i].content}`;
+		if (i != resf.replies.length - 1) {
+			replies_loaded += " || ";
+		};
+		if ((!isFetch) && (resf.replies[i].author.username == localStorage.getItem("username").toLowerCase()) && (resf.author.username != localStorage.getItem("username").toLowerCase())) {
+			if (document.visibilityState == "hidden") {
+				document.title = "(!!) BetterDeer v1";
+			};
+			if (settings.reply_notif) {
+				if (Notification.permission === "granted") {
+					notify(resf.content, "Someone replied to you");
+				} else if (Notification.permission !== "denied") {
+					Notification.requestPermission().then(permission => {
+						if (permission === "granted") {
+							notify(resf.content, "Someone replied to you");
+						};
+					});
+				};
+			};
+		};
+	};
+	if ((!isFetch) && (resf.content.includes("@" + localStorage.getItem("username").toLowerCase()))) {
+		if (document.visibilityState == "hidden") {
+			document.title = "(!!!) BetterDeer v1";
+		};
+		if (settings.mention_notif) {
+			if (Notification.permission === "granted") {
+				notify(resf.content, "Someone mentioned you");
+			} else if (Notification.permission !== "denied") {
+				Notification.requestPermission().then(permission => {
+					if (permission === "granted") {
+						notify(resf.content, "Someone mentioned you");
+					};
+				});
+			};
+		};
+	};
+	var post = document.createElement("div");
+	post.classList.add("post");
+
+	var avatar = document.createElement("img");
+	if (resf.author.avatar) {
+		avatar.src = resf.author.avatar;
+	} else {
+		avatar.src = "https://deer.meltland.dev/default.jpeg";
+	};
+	avatar.setAttribute("onerror", "this.src = 'https://deer.meltland.dev/default.jpeg';")
+	avatar.setAttribute("onclick", `showUser("${resf.author.username}");`);
+	avatar.classList.add("clickable");
+	avatar.classList.add("pfp");
+	post.appendChild(avatar);
+
+	var postUsername = document.createElement("span");
+	postUsername.innerHTML = `<b>${resf.author.display_name}</b> (<span class="mono">@${resf.author.username}</span>)`;
+	if (resf.author.verified) {
+		postUsername.innerHTML += ' <span class="mono">VERIFIED</span>'
+	};
+	if (resf.author.bot) {
+		postUsername.innerHTML += ' <span class="mono">BOT</span>'
+	};
+	postUsername.setAttribute("onclick", `showUser("${resf.author.username}");`);
+	postUsername.classList.add("clickable");
+	post.appendChild(postUsername);
+
+	var breaklineA = document.createElement("br");
+	post.appendChild(breaklineA);
+
+	var postDetails = document.createElement("small");
+	if (isInbox) {
+		postDetails.innerHTML = `${sts}`;
+	} else {
+		postDetails.innerHTML = `${sts} | <span class="text-clickable" onclick="reply(${resf.id});">Reply</span>`;
+	};
+	post.appendChild(postDetails);
+	
+	var breaklineB = document.createElement("br");
+	post.appendChild(breaklineB);
+	
+	if (resf.replies.length != 0) {
+		var replyContent = document.createElement("span");
+		replyContent.innerHTML = replies_loaded;
+		replyContent.classList.add("reply");
+		post.appendChild(replyContent);
+		
+		var horlineB = document.createElement("hr");
+		post.appendChild(horlineB);
+	};
+
+	var postContent = document.createElement("span");
+	postContent.id = "ms-post-content";
+	postContent.innerText = resf.content;
+	post.appendChild(postContent);
+
+	if (resf.attachments.length != 0) {
+		var horline = document.createElement("hr");
+		post.appendChild(horline);
+		
+		var attachmentDetails = document.createElement("span");
+		for (const x in resf.attachments) {
+			attachmentDetails.innerHTML += `<a target="_blank" rel="noopener noreferrer" href="${resf.attachments[x]}">Attachment ${Number(x) + 1} (${resf.attachments[x]})</a><br>`
+		}
+		post.appendChild(attachmentDetails)
+
+		// i love making garbage code because im too lazy to learn how to make things properly
+		// not even a god can help me sobsob
+
+		var attachmentA = document.createElement("img");
+		attachmentA.src = resf.attachments[0]
+		attachmentA.classList.add("attachment")
+		attachmentA.setAttribute("onerror", "this.remove();")
+		post.appendChild(attachmentA);
+		
+		if (resf.attachments.length >= 2) {
+			var attachmentB = document.createElement("img");
+			attachmentB.src = resf.attachments[1]
+			attachmentB.classList.add("attachment")
+			attachmentB.setAttribute("onerror", "this.remove();")
+			post.appendChild(attachmentB);
+		};
+
+		if (resf.attachments.length >= 3) {
+			var attachmentC = document.createElement("img");
+			attachmentC.src = resf.attachments[2]
+			attachmentC.classList.add("attachment")
+			attachmentC.setAttribute("onerror", "this.remove();")
+			post.appendChild(attachmentC);
+		};
+	};
+	var postboxid;
+	if (isInbox) {postboxid = "mi-posts"} else {postboxid = "ms-posts"};
+
+	if (isFetch) {
+		document.getElementById(postboxid).appendChild(post);
+	} else {
+		document.getElementById(postboxid).insertBefore(post, document.getElementById(postboxid).firstChild);
+	};
+	if (markdown) {
+		parseAllMarkdown()
+	};
+	stgsTriggers();
+};
+
+function sendPost() {
+	last_cmd = "post";
+	var content = document.getElementById("ms-msg").value;
+	if (replace_text) {
+		for (const i in text_replacements) {
+			content = content.replaceAll(i, text_replacements[i]);
+		};
+	};
+	ws.send(JSON.stringify({command: "post", content: content, replies: replies, attachments: attachments}))
+	document.getElementById("ms-msg").value = "";
+	attachments = [];
+	replies = [];
+	updateDetailsMsg();
+};
+
+function parseAllMarkdown() {
+	const regexs = [
+		[/\\n/g, '<br>'], // replace \n with newline
+		[/\*\*([^\n]+)\*\*/g, '<b>$1</b>'], // bold
+		[/__([^\n]+)__/g, '<ins>$1</ins>'], // underline
+		[/\*([^\n]+)\*/g, '<i>$1</i>'], // italic
+		[/_([^\n]+)_/g, '<i>$1</i>'], // italic 2
+		[/~~([^\n]+)~~/g, '<del>$1</del>'], // strikethrough
+		[/!\[(?!.*onerror)(.*?)\]\((https?:\/\/.*?\.[A-Za-z]+)\)/g, '<img alt="$1" title="$1" src="$2">'], // inline image
+		[/(`{1,3})(.+?)\1/g, '<pre style="background-color: #333; color: #FFF; border-radius: 10px; padding: 10px; margin: 5px; white-space: pre-wrap; word-wrap: break-word;"><code>$2</code></pre>'], // [inline] code
+		[/\[([^\]]+)\]\(([^\]]+?)\)/g, '<a href="$2" style="color: #9CF; text-decoration: none;">$1</a>'], // link
+		[/\|\|([^\n]+?)\|\|/g, `<button style="border: none; cursor: default !important; background-color: #ede4d5 !important; color: ${settings.button_color}">$1</button>`], // spoiler text
+		[/^# ((?:[^\\\n](?!br>))+)/gm, '<br><h1>$1</h1>'], // header 1
+		[/^## ((?:[^\\\n](?!br>))+)/gm, '<br><h2>$1</h2>'], // header 2
+		[/^### ((?:[^\\\n](?!br>))+)/gm, '<br><h3>$1</h3>'], // header 3
+		[/^#{4} ((?:[^\\\n](?!br>))+)/gm, '<br><h4>$1</h4>'], // header 4
+		[/^#{5} ((?:[^\\\n](?!br>))+)/gm, '<br><h5>$1</h5>'], // header 5
+		[/^#{6} ((?:[^\\\n](?!br>))+)/gm, '<br><h6>$1</h6>'], // header 6
+		[/(?:(?:<br>)# ((?:[^\\\n](?!br>))+))/g, '<h1>$1</h1>'], // header 1 with <br>
+		[/(?:(?:<br>)## ((?:[^\\\n](?!br>))+))/g, '<h2>$1</h2>'], // header 2 with <br>
+		[/(?:(?:<br>)### ((?:[^\\\n](?!br>))+))/g, '<h3>$1</h3>'], // header 3 with <br>
+		[/(?:(?:<br>)#{4} ((?:[^\\\n](?!br>))+))/g, '<h4>$1</h4>'], // header 4 with <br>
+		[/(?:(?:<br>)#{5} ((?:[^\\\n](?!br>))+))/g, '<h5>$1</h5>'], // header 5 with <br>
+		[/(?:(?:<br>)#{6} ((?:[^\\\n](?!br>))+))/g, '<h6>$1</h6>'], // header 6 with <br>
+		[/(?:https?:\/\/)(?:www\.)?(?:(?:youtu\.be\/)|(?:youtube\.com\/watch\?v=))([A-z0-9_-]+)(?:(?:&|\?)t=(\d+))?/g, '<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/$1?start=$2" title="embed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'], // youtube embed
+		[/https?:\/\/(?:www\.)?tenor\.com\/view\/(?:[^0-9]+)([0-9]+)/g, '<iframe style="width: auto; height: fit-content;" src="https://tenor.com/embed/$1" frameborder="0" scrolling="no"></iframe>'] // tenor embed
+	]
+	const divs = document.querySelectorAll('.post');
+	divs.forEach((div) => {
+		const post = div.querySelector('#ms-post-content');
+		if (post) {
+			let html = post.innerHTML;
+			regexs.forEach(([regex, sub]) => {
+				html = html.replace(regex, sub);
+			})
+			html = html.replace();
+			post.innerHTML = html;
+		}
+	});
+}
+
+function postInbox() {
+	last_cmd = "post_inbox";
+	ws.send(JSON.stringify({command: "post_inbox", content: document.getElementById("mm-content-inbox").value.replaceAll("\\n", "\n"), replies: [], attachments: []}))
+	document.getElementById("mm-content-inbox").value = "";
+};
+
+function ban() {
+	last_cmd = "post";
+	if (document.getElementById("mm-until-ban").value != "") {
+		var buntil = new Date(document.getElementById("mm-until-ban").value).getTime() / 1000
+	} else {
+		var buntil = 0
+	};
+	ws.send(JSON.stringify({command: "ban", username: document.getElementById("mm-username-ban").value, banned_until: buntil, ban_reason: document.getElementById("mm-reason-ban").value}))
+	document.getElementById("mm-username-ban").value = "";
+	document.getElementById("mm-until-ban").value = "";
+	document.getElementById("mm-reason-ban").value = "";
+};
+
+function genInviteCode() {
+	last_cmd = "gen_invite";
+	ws.send(JSON.stringify({command: "gen_invite"}))
+};
+
+function resetInvites() {
+	last_cmd = "reset_invites";
+	ws.send(JSON.stringify({command: "reset_invites"}))
+};
+
+function setDisplayName() {
+	last_cmd = "set_display_name";
+	ws.send(JSON.stringify({command: "set_display_name", display_name: document.getElementById("mc-display-name").value}))
+	document.getElementById("mc-display-name").value = "";
+};
+
+function setAvatar() {
+	last_cmd = "set_avatar";
+	ws.send(JSON.stringify({command: "set_avatar", avatar: document.getElementById("mc-avatar").value}))
+	document.getElementById("mc-avatar").value = "";
+};
+
+function setBio() {
+	last_cmd = "set_bio";
+	var bio = document.getElementById("mc-bio").value;
+	if (replace_text) {
+		for (const i in text_replacements) {
+			bio = bio.replaceAll(i, text_replacements[i]);
+		};
+	};
+	ws.send(JSON.stringify({command: "set_bio", bio: bio}))
+	document.getElementById("mc-bio").value = "";
+};
+
+function setLastfm() {
+	last_cmd = "set_lastfm";
+	ws.send(JSON.stringify({command: "set_lastfm", lastfm: document.getElementById("mc-lastfm").value}))
+	document.getElementById("mc-lastfm").value = "";
+};
+
+function updateDetailsMsg() {
+	if (replies.length == 0 && attachments.length == 0) {
+		document.getElementById("ms-details").innerText = ""
+	} else if (replies.length == 0) {
+		if (attachments.length == 1) {var plurals = ""} else {var plurals = "s"}
+		document.getElementById("ms-details").innerHTML = `${attachments.length} attachment${plurals} - <span class="text-clickable" onclick="clearAll();">Remove all</span>`
+	} else if (attachments.length == 0) {
+		if (replies.length == 1) {var plurals = "y"} else {var plurals = "ies"} 
+		document.getElementById("ms-details").innerHTML = `${replies.length} repl${plurals} - <span class="text-clickable" onclick="clearAll();">Remove all</span>`
+	} else {
+		if (replies.length == 1) {var plurals = "y"} else {var plurals = "ies"}
+		if (attachments.length == 1) {var plurals_b = ""} else {var plurals_b = "s"}
+		document.getElementById("ms-details").innerHTML = `${replies.length} repl${plurals}, ${attachments.length} attachment${plurals_b} - <span class="text-clickable" onclick="clearAll();">Remove all</span>`
+	};
+};
+
+function addAttachment() {
+	var ata = window.prompt("Add an attachment", "Enter any URL here...")
+	if ((![null,""].includes(ata)) && (attachments.length != 3)) {
+		attachments.push(ata);
+	};
+	updateDetailsMsg();
+};
+
+function addUpload() {
+	document.getElementById("ms-attach").click()
+	// if (settings.imgbb_key) {
+	//	 document.getElementById("ms-attach").click()
+	// } else {
+	//	 displayError("Please set an ImgBB API key!");
+	// };
+};
+
+async function attachFile() {
+	var iter = 0;
+	var fl = document.getElementById("ms-attach").files;
+	if (fl.length != 0) {
+		displayError("Uploading...");
+		var uploaded = true;
+	} else {
+		var uploaded = false;
+	};
+	for (const i in fl) {
+		if (fl[i] instanceof File) {
+			iter += 1;
+			if (1 + attachments.length <= 3) {
+				try {
+					var f = await uploadFile(fl[i]);
+					attachments.push(f);
+				} catch(err) {
+					uploaded = false;
+					console.log(err);
+					displayError("Couldn't upload file.");
+				};
+			};
+		};
+	};
+	if (uploaded) {
+		closeErrors();
+	};
+	document.getElementById("ms-attach").value = "";
+	updateDetailsMsg();
+};
+
+function reply(id) {
+	if (replies.length != 3) {
+		replies.push(id);
+	};
+	document.getElementById("ms-msg").focus();
+	updateDetailsMsg();
+};
+
+function clearAll() {
+	replies = [];
+	attachments = [];
+	updateDetailsMsg();
+};
+
+function clearHome() {
+	last_cmd = "clear_home";
+	ws.send(JSON.stringify({command: "clear_home"}))
+};
+
+function forceKick() {
+	last_cmd = "force_kick";
+	ws.send(JSON.stringify({command: "force_kick", username: document.getElementById("mm-username-forcekick").value}))
+	document.getElementById("mm-username-forcekick").value = "";
+};
+
+function showUser(user) {
+	last_cmd = "get_user";
+	ws.send(JSON.stringify({command: "get_user", username: user}))
+};
+
+function textinput() {
+	// will be used for future typing indicators
+};
+
+function ping() {
+	ws.send(JSON.stringify({command: "ping"}))
+};
+
+function resetTitle() {
+	document.title = "BetterDeer v1"
+};
+
+document.addEventListener("focus", resetTitle);
+document.addEventListener("visibilitychange", () => {
+	if (document.visibilityState == "visible") {
+		resetTitle();
+	};
+});
+document.addEventListener("paste", (event) => {
+	navigator.permissions.query({name: "clipboard-read"}).then((result) => {
+		if (result.state !== 'denied') {
+            navigator.clipboard.readText().then((text) => {document.getElementById("ms-msg").value = text.replaceAll("\n", "\\n")});
+			if (!localStorage.getItem("paste-reminder")) {
+				displayWarning("Please note that pasting text in ANY text box will remove all previous text in that box. Make sure you save all other text first!");
+				localStorage.setItem("paste-reminder", true)
+			};
+        } else {
+            displayError("Cannot automatically insert newlines because clipboard permission was denied")
+        };
+    });
+});
+
+setInterval(ping, 5000);
+	</script>
+</html>
