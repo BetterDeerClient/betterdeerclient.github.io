@@ -690,16 +690,18 @@ ws.onmessage = (event) => {
 ws.onclose = (event) => {
 	closeErrors();
 	console.log("ws connection closed");
+	document.title = "(?) BetterDeer v1";
 	switchScene("connection-lost");
 };
 
 ws.onerror = (event) => {
 	closeErrors();
 	console.log("ws error");
+	document.title = "(??) BetterDeer v1";
 	switchScene("connection-lost");
 };
 
-function switchScene (newScene) {
+function switchScene(newScene) {
 	if (newScene == "main-inbox") {
 		last_cmd = "get_inbox"
 		ws.send(JSON.stringify({command: "get_inbox"}))
@@ -937,7 +939,7 @@ function parseAllMarkdown() {
 		[/\*([^\n]+)\*/g, '<i>$1</i>'], // italic
 		[/_([^\n]+)_/g, '<i>$1</i>'], // italic 2
 		[/~~([^\n]+)~~/g, '<del>$1</del>'], // strikethrough
-		[/!\[(?!.*onerror)(.*?)\]\((https?:\/\/.*?\.[A-Za-z]+)\)/g, '<img alt="$1" title="$1" src="$2">'], // inline image
+		[/!\[(?!.*onerror)(.*?)\]\((https?:\/\/.*?\.[A-Za-z]+)\)/g, '<button style="background-color: transparent !important;" onclick="window.open(`$2`, `_blank`)"><img src="$2" title="$1 (click to open image in new tab)" alt="$1" style="width: auto; height: 100px; cursor: pointer;"></button>'], // inline image
 		[/(`{1,3})(.+?)\1/g, '<pre style="background-color: #333; color: #FFF; border-radius: 10px; padding: 10px; margin: 5px; white-space: pre-wrap; word-wrap: break-word;"><code>$2</code></pre>'], // [inline] code
 		[/\[([^\]]+)\]\(([^\]]+?)\)/g, '<a href="$2" style="color: #9CF; text-decoration: none;">$1</a>'], // link
 		[/\|\|([^\n]+?)\|\|/g, `<button style="border: none; cursor: default !important; background-color: #ede4d5 !important; color: ${settings.button_color}">$1</button>`], // spoiler text
