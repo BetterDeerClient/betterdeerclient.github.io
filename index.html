@@ -526,14 +526,10 @@ async function uploadFile(file) {
 		method: 'POST',
 		body: data
 	};
-	const res = await fetch("https://catbox.moe/user/api.php", init);
+	const res = await fetch("https://pomf.lain.la/upload.php", init);
 	const url = await res.text();
 	console.log(`uploaded to ${url}`)
-	if (url.includes("catbox.moe")) {
-		return url;
-	} else {
-		return 1n / 0n;
-	};
+	return url;
 };
 
 // whatever, go my ws shit
