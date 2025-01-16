@@ -969,13 +969,14 @@ function parseAllMarkdown() {
 	const divs = document.querySelectorAll('.post');
 	divs.forEach((div) => {
 		const post = div.querySelector('#ms-post-content');
-		if (post) {
+		if (post && !post.classList.contains("mewhenthemarkdownisparsed")) {
 			let html = DOMPurify.sanitize(post.innerHTML).replace(/style=/g, "");
 			regexs.forEach(([regex, sub]) => {
 				html = html.replace(regex, sub);
 			})
 			html = html.replace();
 			post.innerHTML = html;
+			post.classList.add("mewhenthemarkdownisparsed");
 		}
 	});
 }
