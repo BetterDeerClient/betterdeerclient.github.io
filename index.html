@@ -1095,11 +1095,10 @@ function addAttachment() {
 };
 
 function addUpload() {
-	document.getElementById("ms-attach").click()
 	if (settings.imgbb_key) {
 		 document.getElementById("ms-attach").click()
 	} else {
-		 displayError("Please set an ImgBB API key!");
+		 displayError("No ImgBB API key set.");
 	};
 };
 
