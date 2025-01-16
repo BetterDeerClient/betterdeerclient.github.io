@@ -463,6 +463,8 @@ function updateStg(setting) {
 	switch (setting) {
 		case "imgbb_key":
 			settings.imgbb_key = document.getElementById("mc-imgbb").value;
+			document.getElementById("mc-imgbb").innerText = "";
+			break;
 		case "markdown":
 			if (settings.markdown) {
 				settings.markdown = false;
@@ -539,6 +541,7 @@ async function uploadFile(file) {
     	const rsp = await res.json()
     	if ("data" in rsp && "image" in rsp.data && "url" in rsp.data.image) {
         	if (rsp.data.image.url.startsWith('https://i.ibb.co/')) {
+			console.log(`file uploaded to ${rsp.data.image.url}`);
             		return rsp.data.image.url;
         	} else {
             	throw new Error(rsp);
