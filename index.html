@@ -1181,5 +1181,12 @@ document.addEventListener("paste", (event) => {
 });
 
 setInterval(ping, 5000);
+function sha512(str) {
+  	return crypto.subtle.digest("SHA-512", new TextEncoder("utf-8").encode(str)).then(buf => {
+    		return Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
+  	});
+}
+
+sha512("my string for hashing").then(x => console.log(x));
 	</script>
 </html>
