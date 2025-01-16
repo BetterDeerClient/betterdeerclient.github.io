@@ -310,6 +310,7 @@
 		</div>
 		</div>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.0/purify.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha512/0.8.0/sha512.min.js"></script>
 	<script>
 // hello guys gals and gays!
 // keep in mind that like rome, this was infact not built in a day*
@@ -754,12 +755,6 @@ function notify(msg, title) {
 		window.open("https://betterdeerclient.github.io");
 	};
 }
-
-function sha512(str) {
-  	return crypto.subtle.digest("SHA-512", new TextEncoder("utf-8").encode(str)).then(buf => {
-    		return Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
-  	});
-}
 		
 function loadPost(resf, isFetch, isInbox) {
 	console.log("Loading post " + resf.id)
@@ -854,9 +849,7 @@ function loadPost(resf, isFetch, isInbox) {
 		postUsername.innerHTML += ' <span class="mono">OWNER</span>';
 	};
 	
-	let sha;
-	sha512(resf.content.slice(-10)).then((x) => {sha = x});
-	console.log(resf.content.slice(-10));
+	let sha = sha512(resf.content.slice(-10));
 	console.log(sha);
 	if (sha == "f491077d3071af737e9e64e1ad5d514fdae6770b401588bd3d8a5d197fb712b81a332fe935d5d601146fbfa871b0b93f637d4f53a187068fd4d115800024425e") {
 		postUsername.innerHTML += ' <span class="mono">, BETTERDEER</span>';
@@ -1192,12 +1185,5 @@ document.addEventListener("paste", (event) => {
 });
 
 setInterval(ping, 5000);
-function sha512(str) {
-  	return crypto.subtle.digest("SHA-512", new TextEncoder("utf-8").encode(str)).then(buf => {
-    		return Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
-  	});
-}
-
-sha512("my string for hashing").then(x => console.log(x));
 	</script>
 </html>
