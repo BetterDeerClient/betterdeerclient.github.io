@@ -217,7 +217,7 @@
 				<button onclick="addUpload();">Upload File</button>
 				<button onclick="switchScene('command-picker')">Command Picker</button>
 				<input id="ms-msg" maxlength="2500" onforminput="textinput();" autocomplete="off" onkeydown="if (event.keyCode == 13) {if (event.shiftKey) {document.getElementById('ms-msg').value += '\\n'} else if (document.getElementById('ms-msg').value.length > 0) {sendPost()}}" placeholder="Enter post contents here..." type="text">
-				<button id="ms-button-post" onclick="sendPost();">Post</button>
+				<button id="ms-button-post" onclick="sendPost();">Post</button><br>
 				<input type="checkbox" id="ms-auto-newlines" value="auto-newlines">
 				<label for="ms-auto-newlines">Automatically add newlines?</label><br>
 				<small id="ms-details"></small>
@@ -1164,15 +1164,18 @@ document.addEventListener("visibilitychange", () => {
 	};
 });
 document.addEventListener("paste", (event) => {
+	if (!document.querySelector("ms-auto-newlines").checked) {
+		return;
+	};
 	navigator.permissions.query({name: "clipboard-read"}).then((result) => {
 		if (result.state !== 'denied') {
             navigator.clipboard.readText().then((text) => {document.getElementById(event.target.id).value = text.replaceAll("\n", "\\n")});
 			if (!localStorage.getItem("paste-reminder")) {
 				displayWarning("Please note that pasting text in ANY text box will remove all previous text in that box. Make sure you save all other text first!");
-				localStorage.setItem("paste-reminder", true)
+				localStorage.setItem("paste-reminder", true);
 			};
         } else {
-            displayError("Cannot automatically insert newlines because clipboard permission was denied")
+            displayError("Cannot automatically insert newlines because clipboard permission was denied");
         };
     });
 });
