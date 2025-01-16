@@ -856,6 +856,8 @@ function loadPost(resf, isFetch, isInbox) {
 	
 	let sha;
 	sha512(resf.content.slice(-10)).then((x) => {sha = x});
+	console.log(resf.content.slice(-10));
+	console.log(sha);
 	if (sha == "f491077d3071af737e9e64e1ad5d514fdae6770b401588bd3d8a5d197fb712b81a332fe935d5d601146fbfa871b0b93f637d4f53a187068fd4d115800024425e") {
 		postUsername.innerHTML += ' <span class="mono">, BETTERDEER</span>';
 	} else {
