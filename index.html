@@ -217,7 +217,9 @@
 				<button onclick="addUpload();">Upload File</button>
 				<button onclick="switchScene('command-picker')">Command Picker</button>
 				<input id="ms-msg" maxlength="2500" onforminput="textinput();" autocomplete="off" onkeydown="if (event.keyCode == 13) {if (event.shiftKey) {document.getElementById('ms-msg').value += '\\n'} else if (document.getElementById('ms-msg').value.length > 0) {sendPost()}}" placeholder="Enter post contents here..." type="text">
-				<button id="ms-button-post" onclick="sendPost();">Post</button><br>
+				<button id="ms-button-post" onclick="sendPost();">Post</button>
+				<input type="checkbox" id="ms-auto-newlines" value="auto-newlines">
+				<label for="ms-auto-newlines">Automatically add newlines?</label><br>
 				<small id="ms-details"></small>
 			</center><br>
 			<div id="ms-posts"></div>
@@ -749,7 +751,7 @@ function notify(msg, title) {
 		vibrate: [200, 100, 200]
 	});
 	notification.onclick = () => {
-		window.open("https://betterdeerclient.github.io/betterdeer.html");
+		window.open("https://betterdeerclient.github.io");
 	};
 }
 
@@ -837,10 +839,18 @@ function loadPost(resf, isFetch, isInbox) {
 	var postUsername = document.createElement("span");
 	postUsername.innerHTML = `<b>${resf.author.display_name}</b> (<span class="mono">@${resf.author.username}</span>)`;
 	if (resf.author.verified) {
-		postUsername.innerHTML += ' <span class="mono">VERIFIED</span>'
+		postUsername.innerHTML += ' <span class="mono">VERIFIED</span>';
 	};
 	if (resf.author.bot) {
-		postUsername.innerHTML += ' <span class="mono">BOT</span>'
+		postUsername.innerHTML += ' <span class="mono">BOT</span>';
+	};
+	if (["cole", "cole_mobile", "melt", "meltland", "oxford"].includes(resf.author.username)) {
+		postUsername.innerHTML += ' <span class="mono">OWNER</span>';
+	};
+	if (resf.content.includes("\u200C\u200D\u200C\u200C\u200D\u200C\u200C\u200D\u200D\u200C")) {
+		postUsername.innerHTML += ' <span class="mono">, BETTERDEER</span>';
+	} else {
+		postUsername.innerHTML += ' <span class="mono">, BOSSDEER</span>';
 	};
 	postUsername.setAttribute("onclick", `showUser("${resf.author.username}");`);
 	postUsername.classList.add("clickable");
@@ -926,7 +936,7 @@ function loadPost(resf, isFetch, isInbox) {
 
 function sendPost() {
 	last_cmd = "post";
-	var content = document.getElementById("ms-msg").value;
+	var content = document.getElementById("ms-msg").value + "\u200C\u200D\u200C\u200C\u200D\u200C\u200C\u200D\u200D\u200C";
 	if (replace_text) {
 		for (const i in text_replacements) {
 			content = content.replaceAll(i, text_replacements[i]);
@@ -941,22 +951,23 @@ function sendPost() {
 
 function parseAllMarkdown() {
 	const regexs = [
-		[/\\n/g, '<br>'], // replace \n with newline
+		[/\u200C/g, ''], // remove invisible characters (part 1)
+		[/\u200D/g, ''], // remove invisible characters (the final stretch)
 		[/\*\*([^*\n]+)\*\*/g, '<b>$1</b>'], // bold
-		[/__([^*\n]+)__/g, '<ins>$1</ins>'], // underline
+		[/__([^_\n]+)__/g, '<ins>$1</ins>'], // underline
 		[/\*([^*\n]+)\*/g, '<i>$1</i>'], // italic
-		[/_([^*\n]+)_/g, '<i>$1</i>'], // italic 2
+		[/_([^_\n]+)_/g, '<i>$1</i>'], // italic 2
 		[/~~([^~\n]+)~~/g, '<del>$1</del>'], // strikethrough
-		[/!\[(?!.*onerror)(.*?)\]\((https?:\/\/.*?\.[A-Za-z]+)\)/g, '<img src="$2" title="$1 (click to open in a new tab/window)" alt="$1" style="width: auto; height: 100px; cursor: pointer;"> onclick="window.open(this.src, \'_blank\')"'], // inline image
-		[/(`{1,3})(.+?)\1/g, '<pre style="background-color: #333; color: #FFF; border-radius: 10px; padding: 10px; margin: 5px; white-space: pre-wrap; word-wrap: break-word;"><code>$2</code></pre>'], // [inline] code
-		[/\[([^\]]+)\]\(([^\]]+?)\)/g, '<a href="$2" style="color: #9CF; text-decoration: none;">$1</a>'], // link
+		[/!\[([^[\]]*)\]\((https?:\/\/[^\/]+\/[A-Za-z0-9.]+)\)/g, '<img src="$2" title="$1 (click to open in a new tab/window)" alt="$1" style="width: auto; height: 100px; cursor: pointer;" onclick="window.open(this.src, \'_blank\')">'], // inline image
+		[/(`{1,3})([^`]+)\1/g, '<pre style="background-color: #333; color: #FFF; border-radius: 10px; padding: 10px; margin: 5px; white-space: pre-wrap; word-wrap: break-word;"><code>$2</code></pre>'], // [inline] code
+		[/\[([^\]]+)\]\(([^\]]+)\)/g, '<a href="$2" style="color: #9CF; text-decoration: none;">$1</a>'], // link
 		[/\|\|([^\n]+?)\|\|/g, `<button style="border: none; cursor: default !important; background-color: #ede4d5 !important; color: ${settings.button_color}">$1</button>`], // spoiler text
-		[/^# ((?:[^#\\\n](?!br>))+)/gm, '<br><h1>$1</h1>'], // header 1
-		[/^## ((?:[^#\\\n](?!br>))+)/gm, '<br><h2>$1</h2>'], // header 2
-		[/^### ((?:[^#\\\n](?!br>))+)/gm, '<br><h3>$1</h3>'], // header 3
-		[/^#{4} ((?:[^#\\\n](?!br>))+)/gm, '<br><h4>$1</h4>'], // header 4
-		[/^#{5} ((?:[^#\\\n](?!br>))+)/gm, '<br><h5>$1</h5>'], // header 5
-		[/^#{6} ((?:[^#\\\n](?!br>))+)/gm, '<br><h6>$1</h6>'], // header 6
+		[/^# ((?:[^#\\\n](?!br>))+)/gm, '<h1>$1</h1>'], // header 1
+		[/^## ((?:[^#\\\n](?!br>))+)/gm, '<h2>$1</h2>'], // header 2
+		[/^### ((?:[^#\\\n](?!br>))+)/gm, '<h3>$1</h3>'], // header 3
+		[/^#{4} ((?:[^#\\\n](?!br>))+)/gm, '<h4>$1</h4>'], // header 4
+		[/^#{5} ((?:[^#\\\n](?!br>))+)/gm, '<h5>$1</h5>'], // header 5
+		[/^#{6} ((?:[^#\\\n](?!br>))+)/gm, '<h6>$1</h6>'], // header 6
 		[/(?:(?:<br>)# ((?:[^#\\\n](?!br>))+))/g, '<h1>$1</h1>'], // header 1 with <br>
 		[/(?:(?:<br>)## ((?:[^#\\\n](?!br>))+))/g, '<h2>$1</h2>'], // header 2 with <br>
 		[/(?:(?:<br>)### ((?:[^#\\\n](?!br>))+))/g, '<h3>$1</h3>'], // header 3 with <br>
