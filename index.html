@@ -755,6 +755,12 @@ function notify(msg, title) {
 	};
 }
 
+function sha512(str) {
+  	return crypto.subtle.digest("SHA-512", new TextEncoder("utf-8").encode(str)).then(buf => {
+    		return Array.prototype.map.call(new Uint8Array(buf), x=>(('00'+x.toString(16)).slice(-2))).join('');
+  	});
+}
+		
 function loadPost(resf, isFetch, isInbox) {
 	console.log("Loading post " + resf.id)
 	var tsr = resf.created
@@ -847,7 +853,10 @@ function loadPost(resf, isFetch, isInbox) {
 	if (["cole", "cole_mobile", "melt", "meltland", "oxford"].includes(resf.author.username)) {
 		postUsername.innerHTML += ' <span class="mono">OWNER</span>';
 	};
-	if (resf.content.includes("\u200C\u200D\u200C\u200C\u200D\u200C\u200C\u200D\u200D\u200C")) {
+	
+	let sha;
+	sha512(resf.content.slice(-10)).then((x) => {sha = x});
+	if (sha == "f491077d3071af737e9e64e1ad5d514fdae6770b401588bd3d8a5d197fb712b81a332fe935d5d601146fbfa871b0b93f637d4f53a187068fd4d115800024425e") {
 		postUsername.innerHTML += ' <span class="mono">, BETTERDEER</span>';
 	} else {
 		postUsername.innerHTML += ' <span class="mono">, BOSSDEER</span>';
