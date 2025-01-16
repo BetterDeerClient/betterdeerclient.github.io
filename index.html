@@ -234,6 +234,8 @@
 			<button onclick="setAvatar();">Set avatar URL</button><br>
 			<input id="mc-bio" placeholder="Bio..." type="text" maxlength=512>
 			<button onclick="setBio();">Set bio</button><br>
+			<input id="mc-bio" placeholder="ImgBB API key..." type="text" maxlength=32>
+			<button onclick="updateStg('imgbb_key');">Set ImgBB API key</button><br>
 			<input id="mc-lastfm" placeholder="Last.fm..." type="text" maxlength=72>
 			<button onclick="setLastfm();">Set last.fm</button>
 			<h2><b>BetterDeer</b></h2>
@@ -301,7 +303,7 @@
 		<div id="command-picker" class="hidden">
 			<button style="float: right; padding: 10px; border-radius: 4px;" onclick="switchScene('main-scene')">✖</button>
 			<h1>Command Picker</h1>
-			<span>Commands from bots that use deerbot.py are listed here.</span><hr>
+			<span>Commands from bots that use deerbot.py are listed here.<br>You can request your bot to be added here.</span><hr>
 			<h2>Sb4bot</h2>
 			<button onclick="document.getElementById('ms-msg').value = '@Sb4bot help'; switchScene('main-scene')">Detailed command info</button>
 			<button onclick="document.getElementById('ms-msg').value = '@Sb4bot rps <choice: rock|paper|scissors>'; switchScene('main-scene')">Rock paper scissors</button>
@@ -332,13 +334,13 @@ function displayError (errText) {
 	};
 };
 
-function displayWarning (errText) {
+function displayWarning(errText) {
 	document.getElementById("error-text").innerText = errText;
 	document.getElementById("error-bar").classList.remove("hidden");
 	document.getElementById("error-bar").style.backgroundColor = "#f26201";
 };
 
-function closeErrors () {
+function closeErrors() {
 	document.getElementById("error-bar").classList.add("hidden");
 };
 
@@ -373,7 +375,7 @@ let text_replacements = {
 	":ab:": "🆎",
 	":cl:": "🆑"
 };
-const settings_template = {"replace_text": true, "markdown": true, bg_color: "#2e2d2b", post_color: "#403d39", button_color: "#ede4d5", msg_notif: false, reply_notif: true, mention_notif: true, glow: true}
+const settings_template = {"imgbb_key": "", "replace_text": true, "markdown": true, bg_color: "#2e2d2b", post_color: "#403d39", button_color: "#ede4d5", msg_notif: false, reply_notif: true, mention_notif: true, glow: true}
 
 if (localStorage.getItem("settings") == null) {
 	localStorage.setItem("settings", JSON.stringify(settings_template))
@@ -459,6 +461,8 @@ function stgsTriggers() {
 
 function updateStg(setting) {
 	switch (setting) {
+		case "imgbb_key":
+			settings.imgbb_key = document.getElementById("mc-imgbb").value;
 		case "markdown":
 			if (settings.markdown) {
 				settings.markdown = false;
@@ -523,17 +527,25 @@ function updateStg(setting) {
 };
 
 async function uploadFile(file) {
-	const data = new FormData();
-	data.set('reqtype', 'fileupload');
-	data.set('fileToUpload', file);
+	// Original credit to :3/ArrowAced
+    	const data = new FormData();
+    	data.set('key', settings.imgbb_key);
+    	data.set('image', file);
 	const init = {
-		method: 'POST',
-		body: data
-	};
-	const res = await fetch("https://pomf.lain.la/upload.php", init);
-	const url = await res.text();
-	console.log(`uploaded to ${url}`)
-	return url;
+        	method: 'POST',
+        	body: data
+    	};
+    	const res = await fetch("https://api.imgbb.com/1/upload", init);
+    	const rsp = await res.json()
+    	if ("data" in rsp && "image" in rsp.data && "url" in rsp.data.image) {
+        	if (rsp.data.image.url.startsWith('https://i.ibb.co/')) {
+            		return rsp.data.image.url;
+        	} else {
+            	throw new Error(rsp);
+        	};
+    	} else {
+            	throw new Error(rsp);
+        };
 };
 
 // whatever, go my ws shit
@@ -1081,11 +1093,11 @@ function addAttachment() {
 
 function addUpload() {
 	document.getElementById("ms-attach").click()
-	// if (settings.imgbb_key) {
-	//	 document.getElementById("ms-attach").click()
-	// } else {
-	//	 displayError("Please set an ImgBB API key!");
-	// };
+	if (settings.imgbb_key) {
+		 document.getElementById("ms-attach").click()
+	} else {
+		 displayError("Please set an ImgBB API key!");
+	};
 };
 
 async function attachFile() {
