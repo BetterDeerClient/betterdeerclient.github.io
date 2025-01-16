@@ -1164,7 +1164,7 @@ document.addEventListener("visibilitychange", () => {
 	};
 });
 document.addEventListener("paste", (event) => {
-	if (!document.querySelector("ms-auto-newlines").checked) {
+	if (!document.querySelector("#ms-auto-newlines").checked) {
 		return;
 	};
 	navigator.permissions.query({name: "clipboard-read"}).then((result) => {
