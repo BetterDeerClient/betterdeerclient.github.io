@@ -553,11 +553,7 @@ async function uploadFile(file) {
 
 // whatever, go my ws shit
 
-try {
-	const ws = new WebSocket("wss://sokt.meltland.dev") // i hate const!! grr!! >:(
-} catch (e) {
-	const ws = new WebSocket("wss://sokt.fraudulent.loan") // what are you saying cole fuck you
-}
+const ws = new WebSocket("wss://sokt.fraudulent.loan") // what are you saying cole fuck you
 
 ws.onmessage = (event) => {
 	let incoming = JSON.parse(event.data);
