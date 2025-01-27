@@ -1185,6 +1185,17 @@ function getSupportCodeUser() {
     last_cmd = "get_support_codeUser";
     ws.send(JSON.stringify({command: "get_support_code", username: document.getElementById("mm-username-support").value}))
 };
+
+function deleteAccount() {
+    last_cmd = "delete_account";
+    ws.send(JSON.stringify({command: "delete_account", password: document.getElementById("mc-password").value, listener: "daAccountBossDeer"}))
+    document.getElementById("mc-password").value = "";
+};
+		
+function toggleLock() {
+    last_cmd = "toggle_lock";
+    ws.send(JSON.stringify({command: "toggle_lock"}))
+};
 		
 function textinput() {
 	// will be used for future typing indicators
