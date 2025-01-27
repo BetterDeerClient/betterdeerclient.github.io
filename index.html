@@ -958,7 +958,7 @@ function loadPost(resf, isFetch, isInbox) {
 			attachment.src = resf.attachments[i]
 			attachment.classList.add("attachment")
 			attachment.setAttribute("onerror", "this.remove();")
-			post.appendChild(attachmentA);
+			post.appendChild(attachment);
 		}
 	};
 	var postboxid;
