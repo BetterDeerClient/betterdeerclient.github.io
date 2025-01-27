@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US">
 	<head>
-		<title>BetterDeer v1</title>
+		<title>BetterDeer v2</title>
 		<meta name="mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<meta charset="UTF-8">
@@ -169,6 +169,19 @@
 				padding: 20px;
 				z-index: 1000;
 			}
+			#mc-danger-container {
+				width: 100%;
+                background-color: #422b2b;
+                padding: 6px;
+                border-radius: 4px;
+                margin-top: 8px;
+                word-break: break-word;
+                overflow-wrap: break-word;
+                box-sizing: border-box;
+			}
+			.header-notop {
+                margin-top: 0;
+            }
 		</style>
 	</head>
 	<body>
@@ -199,7 +212,7 @@
 				<br>Mods can take action for any reason, but you can submit an appeal to the system admin.<br>
 				<br>To use SoktDeer (and therefore BetterDeer or any other client), you must be 13 years old or older; however, this changes if the digital age of consent in your country is not 13 years old.<br>
 				<br><small>Matches with the January 8, 2025 guidelines</small></pre><br>
-			<small>You may read the full (but harder-to-read) version <a href="https://deer.meltland.dev/GUIDELINES.txt">here</a>.</small><br>
+			<small>You may read the full (but harder-to-read) version <a href="https://deer.fraudulent.loan/GUIDELINES.txt">here</a>.</small><br>
 			<small id="rl-version"></small><br><br>
 			<small><a href="https://speedbee411.neocities.org">Don't know what this is?</a></small>
 		</center></div>
@@ -250,10 +263,16 @@
 			<button id="mc-msg-notif" onclick="updateStg('msg_notif')">Unable to get message notification setting</button><br>
 			<button id="mc-reply-notif" onclick="updateStg('reply_notif')">Unable to get reply notification setting</button><br>
 			<button id="mc-mention-notif" onclick="updateStg('mention_notif')">Unable to get mention notification setting</button><br>
+			<div id="mc-danger-container">
+				<h2 class="header-notop">Account</h2>
+				<p>Please be careful in this section. You can't undo anything here.</p>
+				<span id="mc-support"><button onclick="getSupportCode();">Reveal support code</button></span><br>
+				<input id="mc-password" placeholder="Password..." type="password"><button onclick="if (prompt('Are you ABSOLUTELY SURE you want to do this??? You CANNOT create a new account until you get another invite code!')) {deleteAccount()};" style="background-color: #F00 !important;">Delete Account</button>
+			</div>	
 			<h2><b>Misc</b></h2>
 			<button id="mc-button-markdown" onclick="updateStg('markdown')">Unable to get markdown setting</button><br>
 			<button id="mc-button-replace" onclick="updateStg('replace_text')">Unable to get text replacement setting</button><br><br>
-			<button onclick="for (const i in settings_template) {settings[i] = settings_template[i]}; localStorage.setItem('settings', JSON.stringify(settings)); stgsTriggers();">Revert to Default Settings</button><br>
+			<button onclick="for (const i in settings_template) {settings[i] = settings_template[i]}; localStorage.setItem('settings', JSON.stringify(settings)); stgsTriggers();">Revert to Default Settings</button><br><br>
 			<small id="mc-version"></small>
 		</div>
 		<div id="main-inbox" class="hidden">
@@ -280,10 +299,19 @@
 			<h2><b>Inbox posting</b></h2>
 			<label for="mm-content-inbox">Message:</label><input id="mm-content-inbox" placeholder="Message..." type="text" width=80><br>
 			<button onclick="postInbox();">Post inbox</button>
+			<h2>Support codes</h2>
+			<label for="mm-username-support">Username:</label>
+            <input id="mm-username-support" placeholder="Username..." type="text"></input><br>
+			<label for="mm-content-support">Code:</label>
+            <input id="mm-content-support" placeholder="Code..." type="text"></input><br>
+            <button onclick="getSupportCodeUser();">Verify support code</button><br>
+            <span id="mm-support-verify"></span>
+			<h2>Server locking</h2>
+            <button onclick="toggleLock();">Toggle server lock</button>
 		</div>
 		<div id="user-display" class="hidden">
 			<button style="float: right; padding: 10px; border-radius: 4px;" onclick="switchScene('main-scene');">✖</button><br>
-			<img id="ud-avatar" class="pfp" src="https://deer.meltland.dev/default.jpeg" onerror="this.src = 'https://deer.meltland.dev/default.jpeg'">
+			<img id="ud-avatar" class="pfp" src="https://deer.fraudulent.loan/default.jpeg" onerror="this.src = 'https://deer.fraudulent.loan/default.jpeg'">
 			<span id="ud-display-name"></span><br>
 			<span id="ud-username" class="mono"></span><br>
 			<small id="ud-created"></small><br>
@@ -294,7 +322,7 @@
 			<span id="ud-banned" class="hidden"><small id="ud-banned-span"></small><br></span>
 			<div id="ud-bio-container" style="float: inline-start"><b>Bio</b><br><span id="ud-bio">No bio</span></div>
 			<div id="ud-lastfm-container" style="float: inline-end">
-				<img id="ud-lastfm-cover" class="album-cover" src="https://deer.meltland.dev/default.jpeg" onerror="this.src = 'https://deer.meltland.dev/default.jpeg'">
+				<img id="ud-lastfm-cover" class="album-cover" src="https://deer.fraudulent.loan/default.jpeg" onerror="this.src = 'https://deer.fraudulent.loan/default.jpeg'">
 				<span id="ud-lastfm-name"></span><br>
 				<span id="ud-lastfm-artist"></span><br>
 				<small id="ud-lastfm-album"></small>
@@ -344,8 +372,8 @@ function closeErrors() {
 	document.getElementById("error-bar").classList.add("hidden");
 };
 
-const version = "1.4.1b";
-const serverVersion = "SOKTDEER-2024.12.01-15.11";
+const version = "1.5.0b";
+const serverVersion = "SOKTDEER-2025.01.24-14.00";
 let last_cmd = "";
 let username = "";
 let logged_in = false;
@@ -561,8 +589,8 @@ ws.onmessage = (event) => {
 	switch (incoming.command) {
 		case "greet":
 			closeErrors();
-			document.getElementById("rl-version").innerText = `${version} - ${incoming.version} | BETTERDEER v1`;
-			document.getElementById("mc-version").innerText = `${version} - ${incoming.version} | BETTERDEER v1`;
+			document.getElementById("rl-version").innerText = `${version} - ${incoming.version} | BETTERDEER v2`;
+			document.getElementById("mc-version").innerText = `${version} - ${incoming.version} | BETTERDEER v2`;
 			if (incoming.version != serverVersion) {
 				displayError(`The server is on a different version than the client. Be wary of issues while using the client. (Expected "${serverVersion}", got "${incoming.version}")`);
 			};
@@ -672,7 +700,7 @@ ws.onmessage = (event) => {
 		if (incoming.user.bot) {
 			document.getElementById("ud-special").innerHTML += "<br>Bot user";
 		};
-		if (["sb4bot"].includes(incoming.user.username)) {
+		if (["sb4bot"].includes(incoming.user.username)) { // the reason this is a list is to allow for more bots
 			document.getElementById("ud-special").innerHTML += "<br>Supports BetterDeer command picker";
 		};
 		if (incoming.user.username == "speedbee411") {
@@ -710,20 +738,31 @@ ws.onmessage = (event) => {
 			document.getElementById("ud-lastfm-container").classList.add("hidden")
 		};
 		switchScene('user-display');
-	};
+	} else if (last_cmd == "get_support_code" && "user" in incoming) {
+        document.getElementById("mc-support").innerHTML = "";
+        document.getElementById("mc-support").innerText = 'Your support code is "' + incoming.code + '".\nDO NOT SHARE THIS TO ANYONE!';
+	} else if (last_cmd == "get_support_codeUser" && "user" in incoming) {
+        if (document.getElementById("mm-content-support").value == incoming["code"]) {
+            document.getElementById("mm-support-verify").innerText = incoming["user"] + "'s support code is valid!"
+            document.getElementById("mm-content-support").value = "";
+        } else {
+            document.getElementById("mm-support-verify").innerText = incoming["user"] + "'s support code is NOT valid."
+            document.getElementById("mm-content-support").value = "";
+        }
+    }
 };
 
 ws.onclose = (event) => {
 	closeErrors();
-	console.log("ws connection closed");
-	document.title = "(?) BetterDeer v1";
+	console.log(`ws connection closed\nevent: ${event}`);
+	document.title = "(?) BetterDeer v2";
 	switchScene("connection-lost");
 };
 
 ws.onerror = (event) => {
 	closeErrors();
-	console.log("ws error");
-	document.title = "(??) BetterDeer v1";
+	console.log(`ws error\nevent: ${event}`);
+	document.title = "(??) BetterDeer v2";
 	switchScene("connection-lost");
 };
 
@@ -733,7 +772,7 @@ function switchScene(newScene) {
 		ws.send(JSON.stringify({command: "get_inbox"}))
 	};
 	if (scene == "user-display") {
-		document.getElementById("ud-avatar").src = "https://deer.meltland.dev/default.jpeg";
+		document.getElementById("ud-avatar").src = "https://deer.fraudulent.loan/default.jpeg";
 	};
 	if (!["user-display","command-picker"].includes(newScene)) {
 		document.getElementById(scene).classList.toggle("hidden");
@@ -781,7 +820,7 @@ function loadPost(resf, isFetch, isInbox) {
 	var sts = ts.toLocaleString();
 	if (!(isFetch || (resf.author.username == localStorage.getItem("username").toLowerCase()) || resf.content.includes("@" + localStorage.getItem("username").toLowerCase()) || isInbox)) {
 		if (document.visibilityState == "hidden") {
-			document.title = "(!) BetterDeer v1";
+			document.title = "(!) BetterDeer v2";
 		};
 		if (settings.msg_notif) {
 			if (Notification.permission === "granted") {
@@ -803,7 +842,7 @@ function loadPost(resf, isFetch, isInbox) {
 		};
 		if ((!isFetch) && (resf.replies[i].author.username == localStorage.getItem("username").toLowerCase()) && (resf.author.username != localStorage.getItem("username").toLowerCase())) {
 			if (document.visibilityState == "hidden") {
-				document.title = "(!!) BetterDeer v1";
+				document.title = "(!!) BetterDeer v2";
 			};
 			if (settings.reply_notif) {
 				if (Notification.permission === "granted") {
@@ -820,7 +859,7 @@ function loadPost(resf, isFetch, isInbox) {
 	};
 	if ((!isFetch) && (resf.content.includes("@" + localStorage.getItem("username").toLowerCase()))) {
 		if (document.visibilityState == "hidden") {
-			document.title = "(!!!) BetterDeer v1";
+			document.title = "(!!!) BetterDeer v2";
 		};
 		if (settings.mention_notif) {
 			if (Notification.permission === "granted") {
@@ -841,12 +880,12 @@ function loadPost(resf, isFetch, isInbox) {
 	if (resf.author.avatar) {
 		avatar.src = resf.author.avatar;
 	} else {
-		avatar.src = "https://deer.meltland.dev/default.jpeg";
+		avatar.src = "https://deer.fraudulent.loan/default.jpeg";
 	};
 	if (glow) {
 		avatar.style.boxShadow = "0 0 10px 5px rgba(255, 255, 255, 0.75)";
 	}
-	avatar.setAttribute("onerror", "this.src = 'https://deer.meltland.dev/default.jpeg';")
+	avatar.setAttribute("onerror", "this.src = 'https://deer.fraudulent.loan/default.jpeg';")
 	avatar.setAttribute("onclick", `showUser("${resf.author.username}");`);
 	avatar.classList.add("clickable");
 	avatar.classList.add("pfp");
@@ -913,42 +952,23 @@ function loadPost(resf, isFetch, isInbox) {
 		}
 		post.appendChild(attachmentDetails)
 
-		// i love making garbage code because im too lazy to learn how to make things properly
-		// not even a god can help me sobsob
-
-		var attachmentA = document.createElement("img");
-		attachmentA.src = resf.attachments[0]
-		attachmentA.classList.add("attachment")
-		attachmentA.setAttribute("onerror", "this.remove();")
-		post.appendChild(attachmentA);
-		
-		if (resf.attachments.length >= 2) {
-			var attachmentB = document.createElement("img");
-			attachmentB.src = resf.attachments[1]
-			attachmentB.classList.add("attachment")
-			attachmentB.setAttribute("onerror", "this.remove();")
-			post.appendChild(attachmentB);
-		};
-
-		if (resf.attachments.length >= 3) {
-			var attachmentC = document.createElement("img");
-			attachmentC.src = resf.attachments[2]
-			attachmentC.classList.add("attachment")
-			attachmentC.setAttribute("onerror", "this.remove();")
-			post.appendChild(attachmentC);
-		};
+		// maybe this is efficient code? how the fuck did you not think of this?
+		for (let i = 0; i < resf.attachments.length; i++) {
+			let attachment = document.createElement("img");
+			attachment.src = resf.attachments[i]
+			attachment.classList.add("attachment")
+			attachment.setAttribute("onerror", "this.remove();")
+			post.appendChild(attachmentA);
+		}
 	};
 	var postboxid;
 	if (isInbox) {postboxid = "mi-posts"} else {postboxid = "ms-posts"};
-
 	if (isFetch) {
 		document.getElementById(postboxid).appendChild(post);
 	} else {
 		document.getElementById(postboxid).insertBefore(post, document.getElementById(postboxid).firstChild);
 	};
-	if (markdown) {
-		parseAllMarkdown()
-	};
+	if (markdown) {parseAllMarkdown()};
 	stgsTriggers();
 };
 
@@ -1087,7 +1107,7 @@ function updateDetailsMsg() {
 
 function addAttachment() {
 	var ata = window.prompt("Add an attachment", "Enter any URL here...")
-	if ((![null,""].includes(ata)) && (attachments.length != 3)) {
+	if (![null,""].includes(ata)) {
 		attachments.push(ata);
 	};
 	updateDetailsMsg();
@@ -1113,29 +1133,23 @@ async function attachFile() {
 	for (const i in fl) {
 		if (fl[i] instanceof File) {
 			iter += 1;
-			if (1 + attachments.length <= 3) {
-				try {
-					var f = await uploadFile(fl[i]);
-					attachments.push(f);
-				} catch(err) {
-					uploaded = false;
-					console.log(err);
-					displayError("Couldn't upload file.");
-				};
+			try {
+				var f = await uploadFile(fl[i]);
+				attachments.push(f);
+			} catch(err) {
+				uploaded = false;
+				console.log(err);
+				displayError("Couldn't upload file.");
 			};
 		};
 	};
-	if (uploaded) {
-		closeErrors();
-	};
+	if (uploaded) {closeErrors()};
 	document.getElementById("ms-attach").value = "";
 	updateDetailsMsg();
 };
 
 function reply(id) {
-	if (replies.length != 3) {
-		replies.push(id);
-	};
+	replies.push(id);
 	document.getElementById("ms-msg").focus();
 	updateDetailsMsg();
 };
@@ -1162,6 +1176,16 @@ function showUser(user) {
 	ws.send(JSON.stringify({command: "get_user", username: user}))
 };
 
+function getSupportCode() {
+    last_cmd = "get_support_code";
+    ws.send(JSON.stringify({command: "get_support_code", username: ""}))
+};
+
+function getSupportCodeUser() {
+    last_cmd = "get_support_codeUser";
+    ws.send(JSON.stringify({command: "get_support_code", username: document.getElementById("mm-username-support").value}))
+};
+		
 function textinput() {
 	// will be used for future typing indicators
 };
@@ -1171,7 +1195,7 @@ function ping() {
 };
 
 function resetTitle() {
-	document.title = "BetterDeer v1"
+	document.title = "BetterDeer v2"
 };
 
 document.addEventListener("focus", resetTitle);
