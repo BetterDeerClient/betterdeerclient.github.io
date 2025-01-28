@@ -602,7 +602,7 @@ ws.onmessage = (event) => {
 					ulstring += ", "
 				};
 			};
-			document.getElementById("ms-ulist").innerHTML = `${ulist.length} users online (${ulstring})`;
+			document.getElementById("ms-ulist").textContent = `${ulist.length} users online (${ulstring})`;
 			posts = incoming.messages;
 			for (const i in incoming.messages) {
 				loadPost(incoming.messages[i], true, false);
@@ -626,7 +626,7 @@ ws.onmessage = (event) => {
 					ulstring += ", "
 				};
 			};
-			document.getElementById("ms-ulist").innerHTML = `${ulist.length} users online (${ulstring})`;
+			document.getElementById("ms-ulist").textContent = `${ulist.length} users online (${ulstring})`;
 		};
 	if ("error" in incoming) {
 		if (incoming.error) {
@@ -692,7 +692,7 @@ ws.onmessage = (event) => {
 			idx += 1;
 		};
 		document.getElementById("ud-level").innerText = `Level ${level}`;
-		document.getElementById("ud-permissions2").innerHTML = `${incoming.user.permissions.toString().toLowerCase().replaceAll(",", "<br>")}`;
+		document.getElementById("ud-permissions2").textContent = `${incoming.user.permissions.toString().toLowerCase().replaceAll(",", "\n")}`;
 		document.getElementById("ud-special").innerHTML = "";
 		if (incoming.user.verified) {
 			document.getElementById("ud-special").innerHTML += "<br>Verified user";
@@ -724,9 +724,9 @@ ws.onmessage = (event) => {
 					} else if (lfm.track["@attr"] && lfm.track["@attr"].nowplaying) {
 						document.getElementById("ud-lastfm-container").classList.remove("hidden")
 						document.getElementById("ud-lastfm-cover").src = lfm.track.image[lfm.track.image.length - 1]["#text"];
-						document.getElementById("ud-lastfm-name").innerHTML = `<b>${lfm.track.name}</b>`;
-						document.getElementById("ud-lastfm-album").innerHTML = `on <b>${lfm.track.album["#text"]}</b>`;
-						document.getElementById("ud-lastfm-artist").innerHTML = `by <b>${lfm.track.artist["#text"]}</b>`;
+						document.getElementById("ud-lastfm-name").innerHTML = `<b>${DOMPurify.sanitize(lfm.track.name)}</b>`;
+						document.getElementById("ud-lastfm-album").innerHTML = `on <b>${DOMPurify.sanitize(lfm.track.album["#text"])}</b>`;
+						document.getElementById("ud-lastfm-artist").innerHTML = `by <b>${DOMPurify.sanitize(lfm.track.artist["#text"])}</b>`;
 					} else {
 						document.getElementById("ud-lastfm-container").classList.add("hidden");
 					};
@@ -918,9 +918,9 @@ function loadPost(resf, isFetch, isInbox) {
 
 	var postDetails = document.createElement("small");
 	if (isInbox) {
-		postDetails.innerHTML = `${sts}`;
+		postDetails.innerHTML = `${DOMPurify.sanitize(sts)}`;
 	} else {
-		postDetails.innerHTML = `${sts} | <span class="text-clickable" onclick="reply(${resf.id});">Reply</span>`;
+		postDetails.innerHTML = `${DOMPurify.sanitize(sts)} | <span class="text-clickable" onclick="reply(${resf.id});">Reply</span>`;
 	};
 	post.appendChild(postDetails);
 	
@@ -948,7 +948,7 @@ function loadPost(resf, isFetch, isInbox) {
 		
 		var attachmentDetails = document.createElement("span");
 		for (const x in resf.attachments) {
-			attachmentDetails.innerHTML += `<a target="_blank" rel="noopener noreferrer" href="${resf.attachments[x]}">Attachment ${Number(x) + 1} (${resf.attachments[x]})</a><br>`
+			attachmentDetails.innerHTML += `<a target="_blank" rel="noopener noreferrer" href="${DOMPurify.sanitize(resf.attachments[x])}">Attachment ${Number(x) + 1} (DOMPurify.sanitize(${resf.attachments[x]}))</a><br>`
 		}
 		post.appendChild(attachmentDetails)
 
