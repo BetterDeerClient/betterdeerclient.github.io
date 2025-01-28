@@ -948,7 +948,7 @@ function loadPost(resf, isFetch, isInbox) {
 		
 		var attachmentDetails = document.createElement("span");
 		for (const x in resf.attachments) {
-			attachmentDetails.innerHTML += `<a target="_blank" rel="noopener noreferrer" href="${DOMPurify.sanitize(resf.attachments[x])}">Attachment ${Number(x) + 1} (DOMPurify.sanitize(${resf.attachments[x]}))</a><br>`
+			attachmentDetails.innerHTML += `<a target="_blank" rel="noopener noreferrer" href="${DOMPurify.sanitize(resf.attachments[x])}">Attachment ${Number(x) + 1} (${DOMPurify.sanitize(resf.attachments[x])})</a><br>`
 		}
 		post.appendChild(attachmentDetails)
 
