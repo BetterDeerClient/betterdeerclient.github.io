@@ -602,7 +602,7 @@ ws.onmessage = (event) => {
 					ulstring += ", "
 				};
 			};
-			document.getElementById("ms-ulist").textContent = `${ulist.length} users online (${ulstring})`;
+			document.getElementById("ms-ulist").innerHTML = `${ulist.length} users online (${ulstring})`;
 			posts = incoming.messages;
 			for (const i in incoming.messages) {
 				loadPost(incoming.messages[i], true, false);
