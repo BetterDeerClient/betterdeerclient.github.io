@@ -252,11 +252,11 @@
 			<input id="mc-lastfm" placeholder="Last.fm..." type="text" maxlength=72>
 			<button onclick="setLastfm();">Set last.fm</button>
 			<h2><b>BetterDeer</b></h2>
-			<input id="mc-bg-color" type="color" value="#2e2d2b">
+			<input id="mc-bg-color" type="color" value="#2e2d2b"><input id="mc-bg-color2" type="color" value="#2e2d2b">
 			<button onclick="updateStg('bg_color');">Set Background Color</button><br>
-			<input id="mc-post-color" type="color" value="#403d39">
+			<input id="mc-post-color" type="color" value="#403d39"><input id="mc-post-color2" type="color" value="#403d39">
 			<button onclick="updateStg('post_color');">Set Post Background Color</button><br>
-			<input id="mc-button-color" type="color" value="#ffffff">
+			<input id="mc-button-color" type="color" value="#ede4d5"><input id="mc-button-color2" type="color" value="#ede4d5">
 			<button onclick="updateStg('button_color');">Set Button Color</button><br>
 			<button id="mc-glow" onclick="updateStg('glow')">Unable to get picture glow setting</button><br>
 			<h2><b>Notifications</b></h2>
@@ -448,17 +448,17 @@ function stgsTriggers() {
 			document.getElementById("mc-glow").innerHTML = "Pictures don't glow";
 		};
 		if (settings.bg_color) {
-			document.body.style.backgroundColor = settings.bg_color;
+			document.body.style.background = settings.bg_color;
 		};
 		if (settings.post_color) {
 			document.querySelectorAll(".post").forEach((e) => {
-				e.style.backgroundColor = settings.post_color;
+				e.style.background = settings.post_color;
 			});
 			document.querySelector("#ms-dropdown").style.backgroundColor = settings.post_color;
 		};
 		if (settings.button_color) {
 			document.querySelectorAll("button").forEach((e) => {
-				e.style.backgroundColor = settings.button_color;
+				e.style.background = settings.button_color;
 			});
 		};
 		if (settings.msg_notif) {
@@ -491,7 +491,7 @@ function updateStg(setting) {
 	switch (setting) {
 		case "imgbb_key":
 			settings.imgbb_key = document.getElementById("mc-imgbb").value;
-			document.getElementById("mc-imgbb").innerText = "";
+			document.getElementById("mc-imgbb").value = "";
 			break;
 		case "markdown":
 			if (settings.markdown) {
@@ -515,13 +515,13 @@ function updateStg(setting) {
 			};
 			break;
 		case "bg_color":
-			settings.bg_color = document.getElementById('mc-bg-color').value;
+			settings.bg_color = "linear-gradient(90deg, " + document.getElementById('mc-bg-color').value + " 0%, " + document.getElementById('mc-bg-color2').value + " 100%)";
 			break;
 		case "post_color":
-			settings.post_color = document.getElementById('mc-post-color').value;
+			settings.post_color = "linear-gradient(90deg, " + document.getElementById('mc-post-color').value + " 0%, " + document.getElementById('mc-post-color2').value + " 100%)";
 			break;
 		case "button_color":
-			settings.button_color = document.getElementById('mc-button-color').value;
+			settings.button_color = "linear-gradient(90deg, " + document.getElementById('mc-button-color').value + " 0%, " + document.getElementById('mc-button-color2').value + " 100%)";
 			break;
 		case "msg_notif":
 			if (settings.msg_notif) {
