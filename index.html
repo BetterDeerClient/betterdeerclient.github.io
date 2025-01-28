@@ -626,7 +626,7 @@ ws.onmessage = (event) => {
 					ulstring += ", "
 				};
 			};
-			document.getElementById("ms-ulist").textContent = `${ulist.length} users online (${ulstring})`;
+			document.getElementById("ms-ulist").innerHTML = `${ulist.length} users online (${ulstring})`;
 		};
 	if ("error" in incoming) {
 		if (incoming.error) {
