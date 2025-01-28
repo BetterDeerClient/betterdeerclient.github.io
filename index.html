@@ -1178,12 +1178,12 @@ function showUser(user) {
 
 function getSupportCode() {
     last_cmd = "get_support_code";
-    ws.send(JSON.stringify({command: "get_support_code"}))
+    ws.send(JSON.stringify({command: "get_support_code", username: ""}))
 };
 
 function getSupportCodeUser() {
     last_cmd = "get_support_codeUser";
-    ws.send(JSON.stringify({command: "get_support_codeUser", username: document.getElementById("mm-username-support").value}))
+    ws.send(JSON.stringify({command: "get_support_code", username: document.getElementById("mm-username-support").value}))
 };
 
 function deleteAccount() {
