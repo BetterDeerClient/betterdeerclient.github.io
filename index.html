@@ -1012,7 +1012,7 @@ function parseAllMarkdown() {
 		[/(?:(?:<br>)#{4} ((?:[^#\\\n](?!br>))+))/g, '<h4>$1</h4>'], // header 4 with <br>
 		[/(?:(?:<br>)#{5} ((?:[^#\\\n](?!br>))+))/g, '<h5>$1</h5>'], // header 5 with <br>
 		[/(?:(?:<br>)#{6} ((?:[^#\\\n](?!br>))+))/g, '<h6>$1</h6>'], // header 6 with <br>
-		[/(?:https?:\/\/)(?:www\.)?(?:(?:youtu\.be\/)|(?:youtube\.com\/watch\?v=))([A-z0-9_-]+/g, '<iframe width="560" height="315" src="https://www.youtube.com/embed/$1" title="embed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'], // youtube embed
+		[/(?:https?:\/\/)(?:www\.)?(?:(?:youtu\.be\/)|(?:youtube\.com\/watch\?v=))([A-z0-9_-]+)/g, '<iframe width="560" height="315" src="https://www.youtube.com/embed/$1" title="embed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'], // youtube embed
 		[/(?:https?:\/\/)(?:www\.)?(?:(?:youtu\.be\/)|(?:youtube\.com\/watch\?v=))([A-z0-9_-]+)(?:(?:&|\?)t=(\d+))/g, '<iframe width="560" height="315" src="https://www.youtube.com/embed/$1?start=$2" title="embed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'], // youtube embed with t parameter
 		[/https?:\/\/(?:www\.)?tenor\.com\/view\/(?:[^0-9]+)([0-9]+)/g, '<iframe style="width: auto; height: fit-content;" src="https://tenor.com/embed/$1" frameborder="0" scrolling="no"></iframe>'] // tenor embed
 	]
