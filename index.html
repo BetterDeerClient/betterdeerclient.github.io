@@ -218,7 +218,7 @@
 				<button onclick="addAttachment();">Attach URL</button>
 				<button onclick="addUpload();">Upload File</button>
 				<button onclick="switchScene('command-picker')">Command Picker</button>
-				<input id="ms-msg" maxlength="2500" onforminput="textinput();" autocomplete="off" onkeydown="if (event.keyCode == 13) {if (event.shiftKey) {document.getElementById('ms-msg').value += '\\n'} else if (document.getElementById('ms-msg').value.length > 0) {sendPost()}}" placeholder="Enter post contents here..." type="text">
+				<input id="ms-msg" maxlength="2500" onforminput="textinput();" autocomplete="off" onkeydown="if (event.keyCode == 13) {if (event.shiftKey) {document.getElementById('ms-msg').value += '\\n'} else if (document.getElementById('ms-msg').value.length > 0 || attachments.length > 0) {sendPost()}}" placeholder="Enter post contents here..." type="text">
 				<button id="ms-button-post" onclick="sendPost();">Post</button><br>
 				<input type="checkbox" id="ms-auto-newlines" value="auto-newlines">
 				<label for="ms-auto-newlines">Automatically add newlines?</label><br>
@@ -963,7 +963,9 @@ function loadPost(resf, isFetch, isInbox) {
 
 function sendPost() {
 	last_cmd = "post";
-	var content = document.getElementById("ms-msg").value + "\u200C\u200D\u200C\u200C\u200D\u200C\u200C\u200D\u200D\u200C";
+	if (!document.getElementById("ms-msg").value.includes("@")) {
+		var content = document.getElementById("ms-msg").value + "\u200C\u200D\u200C\u200C\u200D\u200C\u200C\u200D\u200D\u200C";
+	};
 	if (replace_text) {
 		for (const i in text_replacements) {
 			content = content.replaceAll(i, text_replacements[i]);
