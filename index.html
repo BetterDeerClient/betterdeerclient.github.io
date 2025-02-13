@@ -964,7 +964,9 @@ function loadPost(resf, isFetch, isInbox) {
 function sendPost() {
 	last_cmd = "post";
 	if (!document.getElementById("ms-msg").value.includes("@")) {
-		var content = document.getElementById("ms-msg").value + "\u200C\u200D\u200C\u200C\u200D\u200C\u200C\u200D\u200D\u200C";
+		let content = document.getElementById("ms-msg").value + "\u200C\u200D\u200C\u200C\u200D\u200C\u200C\u200D\u200D\u200C";
+	} else {
+		let content = document.getElementById("ms-msg").value;
 	};
 	if (replace_text) {
 		for (const i in text_replacements) {
