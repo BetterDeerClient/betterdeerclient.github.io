@@ -583,7 +583,8 @@ ws.onmessage = (event) => {
 			if (incoming.version != serverVersion) {
 				displayError(`The server is on a different version than the client. Be wary of issues while using the client. (Expected "${serverVersion}", got "${incoming.version}")`);
 			};
-			ulist = incoming.ulist;
+			ulist = Object.keys(incoming.ulist);
+        		updateUlist();
 			var ulstring = "";
 			for (const i in ulist) {
 				ulstring += `<span class="clickable" onclick="showUser('${ulist[i]}');">${ulist[i]}</span>` // fuck i love bad practices!!
@@ -607,15 +608,8 @@ ws.onmessage = (event) => {
 			};
 			stgsTriggers();
 		case "ulist":
-			ulist = incoming.ulist;
-			var ulstring = "";
-			for (const i in ulist) {
-				ulstring += `<span class="clickable" onclick="showUser('${ulist[i]}');">${ulist[i]}</span>` // fuck i love bad practices!!
-				if (i != ulist.length - 1) {
-					ulstring += ", "
-				};
-			};
-			document.getElementById("ms-ulist").innerHTML = `${ulist.length} users online (${ulstring})`;
+			ulist = Object.keys(incoming.ulist);
+        	updateUlist();
 		};
 	if ("error" in incoming) {
 		if (incoming.error) {
@@ -755,6 +749,29 @@ ws.onerror = (event) => {
 	switchScene("connection-lost");
 };
 
+function updateUlist() {
+    var ulstring = "";
+    for (const i in ulist) {
+        ulstring += `<span class="clickable" onclick="showUser('${ulist[i]}');">${ulist[i]}</span>` //vulnerable!
+        if (i != ulist.length - 1) {
+            ulstring += ", "
+        };
+    };
+    if (!(ulist.includes(username)) && ulist.length != 0) {
+        document.getElementById("ms-ulist").innerHTML = `${ulist.length} user online (${ulstring}) (Try <a href='javascript:window.location.reload();'>refreshing the page</a>)`;
+    } else if (ulist.length == 1) {
+        document.getElementById("ms-ulist").innerHTML = "You are the only user online.";
+    } else if (ulist.length == 0) {
+        if (guest) {
+            document.getElementById("ms-ulist").innerHTML = "Nobody is online.";
+        } else {
+            document.getElementById("ms-ulist").innerHTML = "Nobody is online. (Try <a href='javascript:window.location.reload();'>refreshing the page</a>)";
+        };
+    } else {
+        document.getElementById("ms-ulist").innerHTML = `${ulist.length} users online (${ulstring})`;
+    };
+}
+		
 function switchScene(newScene) {
 	if (newScene == "main-inbox") {
 		last_cmd = "get_inbox"
