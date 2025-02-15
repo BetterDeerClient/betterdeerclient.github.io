@@ -918,7 +918,7 @@ function loadPost(resf, isFetch, isInbox) {
 	
 	if (resf.replies.length != 0) {
 		var replyContent = document.createElement("span");
-		replyContent.innerHTML = replies_loaded;
+		replyContent.innerHTML = DOMPurify.sanitize(replies_loaded);
 		replyContent.classList.add("reply");
 		post.appendChild(replyContent);
 		
