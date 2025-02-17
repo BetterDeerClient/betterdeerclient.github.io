@@ -368,6 +368,7 @@ let username = "";
 let logged_in = false;
 let scene = "loading";
 let ulist = [];
+let ulist2 = [];
 let posts = [];
 let replies = [];
 let attachments = [];
@@ -571,7 +572,7 @@ async function uploadFile(file) {
 // whatever, go my ws shit
 
 const ws = new WebSocket("wss://sokt.fraudulent.loan") // what are you saying cole fuck you
-
+		
 ws.onmessage = (event) => {
 	let incoming = JSON.parse(event.data);
 	console.log(incoming);
@@ -583,7 +584,8 @@ ws.onmessage = (event) => {
 			if (incoming.version != serverVersion) {
 				displayError(`The server is on a different version than the client. Be wary of issues while using the client. (Expected "${serverVersion}", got "${incoming.version}")`);
 			};
-			ulist = Object.keys(incoming.ulist);
+			ulist2 = incoming.ulist;
+			ulist = Object.keys(ulist);
         		updateUlist();
 			var ulstring = "";
 			for (const i in ulist) {
@@ -794,7 +796,7 @@ function register() {
 function logIn() {
 	last_cmd = "login_pswd";
 	username = document.getElementById("rl-username").value.toLowerCase();
-	ws.send(JSON.stringify({command: "login_pswd", username: username, password: document.getElementById("rl-password").value, listener: "RegisterLoginPswdListener"}))
+	ws.send(JSON.stringify({command: "login_pswd", username: username, password: document.getElementById("rl-password").value, client: "BetterDeer v2", listener: "RegisterLoginPswdListener"}))
 };
 
 function logOut() {
@@ -905,11 +907,7 @@ function loadPost(resf, isFetch, isInbox) {
 		postUsername.innerHTML += ' <span class="mono">OWNER</span>';
 	};
 	
-	let sha = sha512(resf.content.slice(-10));
-	if (sha == "f491077d3071af737e9e64e1ad5d514fdae6770b401588bd3d8a5d197fb712b81a332fe935d5d601146fbfa871b0b93f637d4f53a187068fd4d115800024425e") {
-		postUsername.innerHTML += ' <span class="mono">, BETTERDEER</span>';
-	} else {
-		postUsername.innerHTML += ' <span class="mono">, BOSSDEER</span>';
+	postUsername.innerHTML += ` <span class="mono">, ${ulist2[resf.author.username]}</span>`;
 	};
 	postUsername.setAttribute("onclick", `showUser("${resf.author.username}");`);
 	postUsername.classList.add("clickable");
