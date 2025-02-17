@@ -585,7 +585,7 @@ ws.onmessage = (event) => {
 				displayError(`The server is on a different version than the client. Be wary of issues while using the client. (Expected "${serverVersion}", got "${incoming.version}")`);
 			};
 			ulist2 = incoming.ulist;
-			ulist = Object.keys(ulist);
+			ulist = Object.keys(ulist2);
         		updateUlist();
 			var ulstring = "";
 			for (const i in ulist) {
@@ -610,7 +610,8 @@ ws.onmessage = (event) => {
 			};
 			stgsTriggers();
 		case "ulist":
-			ulist = Object.keys(incoming.ulist);
+			ulist2 = incoming.ulist;
+			ulist = Object.keys(ulist2);
         	updateUlist();
 		};
 	if ("error" in incoming) {
