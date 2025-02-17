@@ -1026,6 +1026,8 @@ function parseAllMarkdown() {
 		[/(?:(?:<br>)#{5} ((?:[^#\\\n](?!br>))+))/g, '<h5>$1</h5>'], // header 5 with <br>
 		[/(?:(?:<br>)#{6} ((?:[^#\\\n](?!br>))+))/g, '<h6>$1</h6>'], // header 6 with <br>
 		[/\[color=((?:[a-zA-Z]+)|(?:#[0-9a-fA-F]{3})|(?:#[0-9a-fA-F]{4})|(?:#[0-9a-fA-F]{6})|(?:#[0-9a-fA-F]{8}))]([^[]+)\[\/color]/g, '<span id="ms-post-content" style="color: $1;">$2</span>'], // color
+		[/^> (.+)/g, '<blockquote style="border-left: 3px solid; padding: 10px;">$1</blockquote>'], // quote
+		[/\[quote]([^[]+)\[\/quote]/g, '<blockquote style="border-left: 3px solid; padding: 10px;">$1</blockquote>'], // quote bbcode
 	];
 	const divs = document.querySelectorAll('.post');
 	divs.forEach((div) => {
