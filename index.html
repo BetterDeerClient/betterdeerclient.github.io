@@ -906,9 +906,7 @@ function loadPost(resf, isFetch, isInbox) {
 	if (["cole", "cole_mobile", "melt", "meltland", "oxford"].includes(resf.author.username)) {
 		postUsername.innerHTML += ' <span class="mono">OWNER</span>';
 	};
-	
 	postUsername.innerHTML += ` <span class="mono">, ${ulist2[resf.author.username]}</span>`;
-	};
 	postUsername.setAttribute("onclick", `showUser("${resf.author.username}");`);
 	postUsername.classList.add("clickable");
 	post.appendChild(postUsername);
@@ -974,11 +972,7 @@ function loadPost(resf, isFetch, isInbox) {
 
 function sendPost() {
 	last_cmd = "post";
-	if (!document.getElementById("ms-msg").value.includes("@")) {
-		var content = document.getElementById("ms-msg").value + "\u200C\u200D\u200C\u200C\u200D\u200C\u200C\u200D\u200D\u200C";
-	} else {
-		var content = document.getElementById("ms-msg").value;
-	};
+	var content = document.getElementById("ms-msg").value;
 	if (replace_text) {
 		for (const i in text_replacements) {
 			content = content.replaceAll(i, text_replacements[i]);
