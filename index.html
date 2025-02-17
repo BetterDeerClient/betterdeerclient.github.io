@@ -762,11 +762,7 @@ function updateUlist() {
     } else if (ulist.length == 1) {
         document.getElementById("ms-ulist").innerHTML = "You are the only user online.";
     } else if (ulist.length == 0) {
-        if (guest) {
-            document.getElementById("ms-ulist").innerHTML = "Nobody is online.";
-        } else {
-            document.getElementById("ms-ulist").innerHTML = "Nobody is online. (Try <a href='javascript:window.location.reload();'>refreshing the page</a>)";
-        };
+        document.getElementById("ms-ulist").innerHTML = "Nobody is online. (Try <a href='javascript:window.location.reload();'>refreshing the page</a>)";
     } else {
         document.getElementById("ms-ulist").innerHTML = `${ulist.length} users online (${ulstring})`;
     };
