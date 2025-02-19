@@ -606,7 +606,7 @@ ws.onmessage = (event) => {
 			} else {
 				username = localStorage.getItem("username").toLowerCase();
 				last_cmd = "login_token";
-				ws.send(JSON.stringify({command: "login_token", username: username, token: localStorage.getItem("token")}))
+				ws.send(JSON.stringify({command: "login_token", username: username, token: localStorage.getItem("token"), client: "BetterDeer v2"}))
 			};
 			stgsTriggers();
 		case "ulist":
