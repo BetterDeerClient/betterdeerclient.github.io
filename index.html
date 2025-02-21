@@ -231,14 +231,19 @@
 			<button onclick="switchScene('main-scene');">Close Settings</button><br>
 			<h2><b>Profile</b></h2>
 			<input id="mc-display-name" placeholder="Display name..." type="text" maxlength=20>
+			<label for="mc-display-name">Display name:</label><br>
 			<button onclick="setDisplayName();">Set display name</button><br>
 			<input id="mc-avatar" placeholder="Avatar URL..." type="text" maxlength=656>
+			<label for="mc-avatar">Avatar URL:</label><br>
 			<button onclick="setAvatar();">Set avatar URL</button><br>
 			<input id="mc-bio" placeholder="Bio..." type="text" maxlength=512>
+			<label for="mc-bio">Bio:</label><br>
 			<button onclick="setBio();">Set bio</button><br>
 			<input id="mc-imgbb" placeholder="ImgBB API key..." type="text" maxlength=32>
+			<label for="mc-imgbb">ImgBB API key::</label><br>
 			<button onclick="updateStg('imgbb_key');">Set ImgBB API key</button><br>
 			<input id="mc-lastfm" placeholder="Last.fm..." type="text" maxlength=72>
+			<label for="mc-lastfm">Last.fm username:</label><br>
 			<button onclick="setLastfm();">Set last.fm</button>
 			<h2><b>BetterDeer</b></h2>
 			<input id="mc-bg-color" type="color" value="#2e2d2b"><input id="mc-bg-color2" type="color" value="#2e2d2b">
@@ -248,6 +253,10 @@
 			<input id="mc-button-color" type="color" value="#ede4d5"><input id="mc-button-color2" type="color" value="#ede4d5">
 			<button onclick="updateStg('button_color');">Set Button Color</button><br>
 			<button id="mc-glow" onclick="updateStg('glow')">Unable to get picture glow setting</button><br>
+			<input id="mc-blockuser" placeholder="ImgBB API key..." type="text" maxlength=20>
+			<label for="mc-blockuser">Username:</label>
+			<button onclick="updateStg('block');">Toggle user in blocked list</button><br>
+			<span id="blocked">Unable to retrieve blocked users</span>
 			<h2><b>Notifications</b></h2>
 			<button id="mc-msg-notif" onclick="updateStg('msg_notif')">Unable to get message notification setting</button><br>
 			<button id="mc-reply-notif" onclick="updateStg('reply_notif')">Unable to get reply notification setting</button><br>
@@ -362,7 +371,7 @@ function closeErrors() {
 };
 
 const version = "1.5.0b";
-const serverVersion = "SOKTDEER-2025.01.24-14.00";
+const serverVersion = "Sokt-1.5.3b";
 let last_cmd = "";
 let username = "";
 let logged_in = false;
@@ -393,7 +402,7 @@ let text_replacements = {
 	":ab:": "🆎",
 	":cl:": "🆑"
 };
-const settings_template = {"imgbb_key": "", "replace_text": true, "markdown": true, bg_color: "#2e2d2b", post_color: "#403d39", button_color: "#ede4d5", msg_notif: false, reply_notif: true, mention_notif: true, glow: true}
+const settings_template = {"imgbb_key": "", "replace_text": true, "markdown": true, bg_color: "#2e2d2b", post_color: "#403d39", button_color: "#ede4d5", msg_notif: false, reply_notif: true, mention_notif: true, glow: true, blocked: []}
 
 if (localStorage.getItem("settings") == null) {
 	localStorage.setItem("settings", JSON.stringify(settings_template))
@@ -472,6 +481,11 @@ function stgsTriggers() {
 			mention_notif = false;
 			document.getElementById("mc-mention-notif").innerHTML = "No notifications on mention";
 		};
+		if (settings.blocked.length > 0) {
+			document.getElementById("blocked").innerText = "Blocked users: " + settings.blocked.join(", ");
+		} else {
+			document.getElementById("blocked").innerText = "No blocked users"
+		}
 	} finally {
 		return;
 	}
@@ -502,6 +516,15 @@ function updateStg(setting) {
 				settings.glow = false;
 			} else {
 				settings.glow = true;
+			};
+			break;
+		case "block":
+			let v = document.getElementById('mc-blockuser').value);
+			let i = settings.blocked.indexOf(v);
+			if (i == -1) {
+				settings.blocked.push(v);
+			} else {
+				settings.blocked.splice(i, 1);
 			};
 			break;
 		case "bg_color":
@@ -582,7 +605,7 @@ ws.onmessage = (event) => {
 			document.getElementById("rl-version").innerText = `${version} - ${incoming.version} | BETTERDEER v2`;
 			document.getElementById("mc-version").innerText = `${version} - ${incoming.version} | BETTERDEER v2`;
 			if (incoming.version != serverVersion) {
-				displayError(`The server is on a different version than the client. Be wary of issues while using the client. (Expected "${serverVersion}", got "${incoming.version}")`);
+				displayError(`The server is on a different version than the client. Be wary of issues while using the client. (Expected "${incoming.version}", got "${serverVersion}")`);
 			};
 			ulist2 = incoming.ulist;
 			ulist = Object.keys(ulist2);
@@ -817,9 +840,9 @@ function notify(msg, title) {
 		
 function loadPost(resf, isFetch, isInbox) {
 	console.log("Loading post " + resf.id)
-	var tsr = resf.created
-	var tsra = tsr * 1000
-	var tsrb = Math.trunc(tsra)
+	var tsr = resf.created;
+	var tsra = tsr * 1000;
+	var tsrb = Math.trunc(tsra);
 	var ts = new Date();
 	ts.setTime(tsrb);
 	var sts = ts.toLocaleString();
@@ -921,6 +944,9 @@ function loadPost(resf, isFetch, isInbox) {
 	} else {
 		postDetails.innerHTML = `${DOMPurify.sanitize(sts)} | <span class="text-clickable" onclick="reply(${resf.id});">Reply</span>`;
 	};
+	if (settings.blocked.includes(resf.username)) {
+		replies_loaded = "BLOCKED";
+	};
 	post.appendChild(postDetails);
 	
 	var breaklineB = document.createElement("br");
@@ -938,10 +964,14 @@ function loadPost(resf, isFetch, isInbox) {
 
 	var postContent = document.createElement("span");
 	postContent.id = "ms-post-content";
-	postContent.innerText = resf.content;
+	if (!settings.blocked.includes(resf.username)) {
+		postContent.innerText = resf.content;
+	} else {
+		postContent.innerText = "https://youtu.be/N8oelDd5jy0";
+	};
 	post.appendChild(postContent);
 
-	if (resf.attachments.length != 0) {
+	if ((resf.attachments.length != 0) && (!settings.blocked.includes(resf.username))) {
 		var horline = document.createElement("hr");
 		post.appendChild(horline);
 		
@@ -988,8 +1018,6 @@ function sendPost() {
 
 function parseAllMarkdown() {
 	const regexs = [
-		[/\u200C/g, ''], // remove invisible characters (part 1)
-		[/\u200D/g, ''], // remove invisible characters (the final stretch)
 		[/(?:https?:\/\/)(?:www\.)?(?:(?:youtu\.be\/)|(?:youtube\.com\/watch\?v=))([A-z0-9_-]+)/g, '<iframe width="560" height="315" src="https://www.youtube.com/embed/$1" title="embed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'], // youtube embed
 		[/(?:https?:\/\/)(?:www\.)?(?:(?:youtu\.be\/)|(?:youtube\.com\/watch\?v=))([A-z0-9_-]+)(?:(?:&|\?)t=(\d+))/g, '<iframe width="560" height="315" src="https://www.youtube.com/embed/$1?start=$2" title="embed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'], // youtube embed with t parameter
 		[/https?:\/\/(?:www\.)?tenor\.com\/view\/(?:[^0-9]+)([0-9]+)/g, '<iframe style="width: auto; height: fit-content;" src="https://tenor.com/embed/$1" frameborder="0" scrolling="no"></iframe>'], // tenor embed
