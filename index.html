@@ -417,7 +417,7 @@ let settings = JSON.parse(localStorage.getItem("settings"));
 // new field thingy automaticinator #PurgecoreForever
 
 for (const i in settings_template) {
-	if (!settings.includes(i)) {
+	if (!i in settings) {
 		settings[i] = settings_template[i];
 		localStorage.setItem("settings", JSON.stringify(settings));
 	};
