@@ -222,7 +222,7 @@
 				<button id="ms-button-post" onclick="sendPost();">Post</button><br>
 				<input type="checkbox" id="ms-auto-newlines" value="auto-newlines">
 				<label for="ms-auto-newlines">Automatically add newlines?</label><br>
-				<small id="ms-details"></small>
+				<small id="ms-details"></small><hr>
 			</center><br>
 			<div id="ms-posts"></div>
 			<input class="hidden" id="ms-attach" onchange="attachFile();" multiple="true" type="file">
@@ -230,19 +230,19 @@
 		<div id="main-config" class="hidden">
 			<button onclick="switchScene('main-scene');">Close Settings</button><br>
 			<h2><b>Profile</b></h2>
-			<label for="mc-display-name">Display name:</label><br>
+			<label for="mc-display-name">Display name:</label>
 			<input id="mc-display-name" placeholder="Display name..." type="text" maxlength=20>
 			<button onclick="setDisplayName();">Set display name</button><br>
-			<label for="mc-avatar">Avatar URL:</label><br>
+			<label for="mc-avatar">Avatar URL:</label>
 			<input id="mc-avatar" placeholder="Avatar URL..." type="text" maxlength=656>
 			<button onclick="setAvatar();">Set avatar URL</button><br>
-			<label for="mc-bio">Bio:</label><br>
+			<label for="mc-bio">Bio:</label>
 			<input id="mc-bio" placeholder="Bio..." type="text" maxlength=512>
 			<button onclick="setBio();">Set bio</button><br>
-			<label for="mc-imgbb">ImgBB API key:</label><br>
+			<label for="mc-imgbb">ImgBB API key:</label>
 			<input id="mc-imgbb" placeholder="ImgBB API key..." type="text" maxlength=32>
 			<button onclick="updateStg('imgbb_key');">Set ImgBB API key</button><br>
-			<label for="mc-lastfm">Last.fm username:</label><br>
+			<label for="mc-lastfm">Last.fm username:</label>
 			<input id="mc-lastfm" placeholder="Last.fm..." type="text" maxlength=72>
 			<button onclick="setLastfm();">Set last.fm</button>
 			<h2><b>BetterDeer</b></h2>
