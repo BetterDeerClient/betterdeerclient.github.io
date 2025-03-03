@@ -309,7 +309,7 @@
 		</div>
 		<div id="user-display" class="hidden">
 			<button style="float: right; padding: 10px; border-radius: 4px;" onclick="switchScene('main-scene');">✖</button><br>
-			<img id="ud-avatar" class="pfp" src="https://deer.fraudulent.loan/default.jpeg" onerror="this.src = 'https://deer.fraudulent.loan/default.jpeg'">
+			<img id="ud-avatar" class="pfp" src="https://deer.fraudulent.loan/assets/default.png" onerror="this.src = 'https://deer.fraudulent.loan/assets/default.png'">
 			<span id="ud-display-name"></span><br>
 			<span id="ud-username" class="mono"></span><br>
 			<small id="ud-created"></small><br>
@@ -320,7 +320,7 @@
 			<span id="ud-banned" class="hidden"><small id="ud-banned-span"></small><br></span>
 			<div id="ud-bio-container" style="float: inline-start"><b>Bio</b><br><span id="ud-bio">No bio</span></div>
 			<div id="ud-lastfm-container" style="float: inline-end">
-				<img id="ud-lastfm-cover" class="album-cover" src="https://deer.fraudulent.loan/default.jpeg" onerror="this.src = 'https://deer.fraudulent.loan/default.jpeg'">
+				<img id="ud-lastfm-cover" class="album-cover" src="https://deer.fraudulent.loan/assets/default.png" onerror="this.src = 'https://deer.fraudulent.loan/assets/default.png'">
 				<span id="ud-lastfm-name"></span><br>
 				<span id="ud-lastfm-artist"></span><br>
 				<small id="ud-lastfm-album"></small>
@@ -800,7 +800,7 @@ function switchScene(newScene) {
 		ws.send(JSON.stringify({command: "get_inbox"}))
 	};
 	if (scene == "user-display") {
-		document.getElementById("ud-avatar").src = "https://deer.fraudulent.loan/default.jpeg";
+		document.getElementById("ud-avatar").src = "https://deer.fraudulent.loan/assets/default.png";
 	};
 	if (!["user-display","command-picker"].includes(newScene)) {
 		document.getElementById(scene).classList.toggle("hidden");
@@ -908,12 +908,12 @@ function loadPost(resf, isFetch, isInbox) {
 	if (resf.author.avatar) {
 		avatar.src = resf.author.avatar;
 	} else {
-		avatar.src = "https://deer.fraudulent.loan/default.jpeg";
+		avatar.src = "https://deer.fraudulent.loan/assets/default.png";
 	};
 	if (glow) {
 		avatar.style.boxShadow = "0 0 10px 5px rgba(255, 255, 255, 0.75)";
 	}
-	avatar.setAttribute("onerror", "this.src = 'https://deer.fraudulent.loan/default.jpeg';")
+	avatar.setAttribute("onerror", "this.src = 'https://deer.fraudulent.loan/assets/default.png';")
 	avatar.setAttribute("onclick", `showUser("${resf.author.username}");`);
 	avatar.classList.add("clickable");
 	avatar.classList.add("pfp");
