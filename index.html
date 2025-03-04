@@ -10,12 +10,12 @@
 			body {
 				font-family: 'Noto Sans', sans-serif;
 				margin: 0px;
-				background-color: #2e2d2b;
+				background-color: #000032;
 				color: #ede4d5;
 				color-scheme: dark;
 			}
 			button {
-				background-color: #000032;
+				background-color: #000064;
 				color: #ede4d5;
 				border: none;
 				border-radius: 16px;
@@ -24,7 +24,7 @@
 				margin: 4px;
 			}
 			button:hover {
-				background-color: #000048 !important;
+				background-color: #000080 !important;
 				color: #ede4d5;
 				cursor: pointer;
 			}
@@ -117,7 +117,7 @@
 			}
 			#ud-lastfm-container {
 				width: 80%;
-				background-color: #403d39;
+				background-color: #000064;
 				padding: 9px;
 				border-radius: 16px;
 				margin: 8px;
@@ -127,7 +127,7 @@
 			}
 			#ud-bio-container {
 				width: 80%;
-				background-color: #403d39;
+				background-color: #000064;
 				padding: 9px;
 				border-radius: 10px;
 				margin: 8px;
@@ -147,8 +147,8 @@
 				height:auto;
 			}
 			.rl-guidelines {
-				background-color: #ede4d5;
-				color: black;
+				background-color: #000064;
+				color: #ede4d5;
 				border: none;
 				border-radius: 10px;
 				padding: 9px;
@@ -158,9 +158,7 @@
 			}
 			.reply {
 				color: #ede4d5;
-				padding: 9px;
 				border-radius: 16px;
-				margin-top: 16px;
 				background-color: rgba(0, 0, 128, 0.8);
 			}
 			#command-picker {
@@ -406,7 +404,7 @@ let text_replacements = {
 	":ab:": "🆎",
 	":cl:": "🆑"
 };
-const settings_template = {"imgbb_key": "", "replace_text": true, "markdown": true, "bg_color": "#2e2d2b", "post_color": "#403d39", "button_color": "#ede4d5", "msg_notif": false, "reply_notif": true, "mention_notif": true, "glow": true, "blocked": []}
+const settings_template = {"imgbb_key": "", "replace_text": true, "markdown": true, "bg_color": "#000032", "post_color": "#000064", "button_color": "#000064", "msg_notif": false, "reply_notif": true, "mention_notif": true, "glow": true, "blocked": []}
 
 if (localStorage.getItem("settings") == null) {
 	localStorage.setItem("settings", JSON.stringify(settings_template))
