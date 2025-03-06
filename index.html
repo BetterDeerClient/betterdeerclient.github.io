@@ -960,7 +960,7 @@ function loadPost(resf, isFetch, isInbox) {
 	if (isInbox) {
 		postDetails.innerHTML = `${DOMPurify.sanitize(sts)}`;
 	} else {
-		postDetails.innerHTML = `${DOMPurify.sanitize(sts)} | <span class="text-clickable" onclick="reply(${resf.id}, '${resf.content.replaceAll("\n", "\\n").replaceAll("<br>", "\\n").replaceAll("'", "\\'")}');">Reply</span>`;
+		postDetails.innerHTML = `${DOMPurify.sanitize(sts)} | <span class="text-clickable" onclick="reply(${resf.id}, '${resf.content.replaceAll("\n", "\\n").replaceAll("<br>", "\\n").replaceAll("'", "\\'").replaceAll('"', '\\"')}');">Reply</span>`;
 	};
 	if (settings.blocked.includes(resf.username)) {
 		replies_loaded = "BLOCKED";
