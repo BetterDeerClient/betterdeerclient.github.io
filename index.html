@@ -1038,7 +1038,7 @@ function sendPost() {
 function parseAllMarkdown() {
 	const regexs = [
 		[/:yuhhuh:/g, "<img src='https://cdn.discordapp.com/emojis/1227268820213698611.webp?size=24&quality=lossless'>"], // yuhhuh
-		[/:nuhhuh:/g, "<img src='https://cdn.discordapp.com/emojis/1227268820213698611.webp?size=24&quality=lossless'>"], // nuhhuh
+		[/:nuhhuh:/g, "<img src='https://cdn.discordapp.com/emojis/1233290735999258664.webp?size=24&quality=lossless'>"], // nuhhuh
 		[/(?:https?:\/\/)(?:www\.)?(?:(?:youtu\.be\/)|(?:youtube\.com\/watch\?v=))([A-z0-9_-]+)/g, '<iframe width="560" height="315" src="https://www.youtube.com/embed/$1" title="embed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'], // youtube embed
 		[/(?:https?:\/\/)(?:www\.)?(?:(?:youtu\.be\/)|(?:youtube\.com\/watch\?v=))([A-z0-9_-]+)(?:(?:&|\?)t=(\d+))/g, '<iframe width="560" height="315" src="https://www.youtube.com/embed/$1?start=$2" title="embed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'], // youtube embed with t parameter
 		[/https?:\/\/(?:www\.)?tenor\.com\/view\/(?:[^0-9]+)([0-9]+)/g, '<iframe style="width: auto; height: fit-content;" src="https://tenor.com/embed/$1" frameborder="0" scrolling="no"></iframe>'], // tenor embed
