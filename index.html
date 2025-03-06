@@ -960,7 +960,7 @@ function loadPost(resf, isFetch, isInbox) {
 	if (isInbox) {
 		postDetails.innerHTML = `${DOMPurify.sanitize(sts)}`;
 	} else {
-		postDetails.innerHTML = `${DOMPurify.sanitize(sts)} | <span class="text-clickable" onclick="reply(${resf.id}, '${resf.content.replaceAll("\n", "\\n").replaceAll("<br>", "\\n").replaceAll("'", "&apos;")}');">Reply</span>`;
+		postDetails.innerHTML = `${DOMPurify.sanitize(sts)} | <span class="text-clickable" onclick="reply(${resf.id}, '${resf.content.replaceAll("\n", "\\n").replaceAll("<br>", "\\n").replaceAll("'", "\\'")}');">Reply</span>`;
 	};
 	if (settings.blocked.includes(resf.username)) {
 		replies_loaded = "BLOCKED";
@@ -1212,7 +1212,7 @@ function reply(id, msg) {
 };
 
 function showReplies() {
-	document.getElementById("rd-display").textContent = replies2.join("\n");
+	document.getElementById("rd-display").innerHTML = DOMPurify.sanitize(replies2.join("<br>"));
 	switchScene('reply-display');
 };
 		
