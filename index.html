@@ -1021,7 +1021,7 @@ function loadPost(resf, isFetch, isInbox) {
 
 function sendPost() {
 	last_cmd = "post";
-	var content = document.getElementById("ms-msg").value;
+	var content = document.getElementById("ms-msg").value.replace(/u\+([0-9a-fA-F]{5})/g, (match, hex) => String.fromCodePoint(parseInt(hex, 16)));
 	if (replace_text) {
 		for (const i in text_replacements) {
 			content = content.replaceAll(i, text_replacements[i]);
@@ -1267,9 +1267,7 @@ function toggleLock() {
 };
 		
 function textinput() {
-	setTimeout(() => {
-		document.getElementById("ms-msg").value = document.getElementById("ms-msg").value.replace(/u\+([0-9a-fA-F]{5})/g, (match, hex) => String.fromCodePoint(parseInt(hex, 16)));
-	}, 100);
+	// typing indicators
 };
 
 function ping() {
