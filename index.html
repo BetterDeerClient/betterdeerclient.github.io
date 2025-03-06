@@ -115,6 +115,16 @@
 				padding: 20px;
 				z-index: 1000;
 			}
+			#reply-display {
+				position: fixed;
+				top: 10%;
+				left: 5%;
+				width: 90%;
+				height: 70%;
+				background-color: rgba(0, 0, 0, 0.8);
+				padding: 20px;
+				z-index: 1000;
+			}
 			#ud-lastfm-container {
 				width: 80%;
 				background-color: #000032;
@@ -328,6 +338,11 @@
 				<small id="ud-lastfm-album"></small>
 			</div>
 		</div>
+		<div id="reply-display" class="hidden">
+			<button style="float: right; padding: 10px; border-radius: 4px;" onclick="switchScene('main-scene');">✖</button><br>
+			<h1>Replies</h1>
+			<span id="rd-display"></span>
+		</div>
 		<div id="command-picker" class="hidden">
 			<button style="float: right; padding: 10px; border-radius: 4px;" onclick="switchScene('main-scene')">✖</button>
 			<h1>Command Picker</h1>
@@ -382,6 +397,7 @@ let ulist = [];
 let ulist2 = [];
 let posts = [];
 let replies = [];
+let replies2 = [];
 let attachments = [];
 
 let replace_text = false;
@@ -751,7 +767,7 @@ ws.onmessage = (event) => {
 		switchScene('user-display');
 	} else if (last_cmd == "get_support_code" && "user" in incoming) {
         document.getElementById("mc-support").innerHTML = "";
-        document.getElementById("mc-support").innerText = 'Your support code is "' + incoming.code + '".\nDO NOT SHARE THIS TO ANYONE!';
+        document.getElementById("mc-support").innerText = 'Your support code is "' + `<span class="text-clickable" onclick="navigator.clipboard.writeText(${incoming.code});" title="Click to copy support code">${incoming.code}</span>` + '".\nDO NOT SHARE THIS TO ANYONE!';
 	} else if (last_cmd == "get_support_codeUser" && "user" in incoming) {
         if (document.getElementById("mm-content-support").value == incoming["code"]) {
             document.getElementById("mm-support-verify").innerText = incoming["user"] + "'s support code is valid!"
@@ -804,10 +820,10 @@ function switchScene(newScene) {
 	if (scene == "user-display") {
 		document.getElementById("ud-avatar").src = "https://deer.fraudulent.loan/assets/default.png";
 	};
-	if (!["user-display","command-picker"].includes(newScene)) {
+	if (!["user-display","reply-display","command-picker"].includes(newScene)) {
 		document.getElementById(scene).classList.toggle("hidden");
 	};
-	if (!["user-display","command-picker"].includes(scene)) {
+	if (!["user-display","reply-display","command-picker"].includes(scene)) {
 		document.getElementById(newScene).classList.toggle("hidden");
 	};
 	scene = newScene;
@@ -944,7 +960,7 @@ function loadPost(resf, isFetch, isInbox) {
 	if (isInbox) {
 		postDetails.innerHTML = `${DOMPurify.sanitize(sts)}`;
 	} else {
-		postDetails.innerHTML = `${DOMPurify.sanitize(sts)} | <span class="text-clickable" onclick="reply(${resf.id});">Reply</span>`;
+		postDetails.innerHTML = `${DOMPurify.sanitize(sts)} | <span class="text-clickable" onclick="reply(${resf.id}, ${resf.content});">Reply</span>`;
 	};
 	if (settings.blocked.includes(resf.username)) {
 		replies_loaded = "BLOCKED";
@@ -1015,6 +1031,7 @@ function sendPost() {
 	document.getElementById("ms-msg").value = "";
 	attachments = [];
 	replies = [];
+	replies2 = [];
 	updateDetailsMsg();
 };
 
@@ -1131,14 +1148,14 @@ function updateDetailsMsg() {
 		document.getElementById("ms-details").innerText = ""
 	} else if (replies.length == 0) {
 		if (attachments.length == 1) {var plurals = ""} else {var plurals = "s"}
-		document.getElementById("ms-details").innerHTML = `${attachments.length} attachment${plurals} - <span class="text-clickable" onclick="clearAll();">Remove all</span>`
+		document.getElementById("ms-details").innerHTML = `${attachments.length} attachment${plurals} - <span class="text-clickable" onclick="clearAttachments();">Remove attachments</span>`
 	} else if (attachments.length == 0) {
 		if (replies.length == 1) {var plurals = "y"} else {var plurals = "ies"} 
-		document.getElementById("ms-details").innerHTML = `${replies.length} repl${plurals} - <span class="text-clickable" onclick="clearAll();">Remove all</span>`
+		document.getElementById("ms-details").innerHTML = `<span class="text-clickable" onclick="showReplies();">${replies.length} repl${plurals}</span> - <span class="text-clickable" onclick="clearReplies();">Remove replies</span>`
 	} else {
 		if (replies.length == 1) {var plurals = "y"} else {var plurals = "ies"}
 		if (attachments.length == 1) {var plurals_b = ""} else {var plurals_b = "s"}
-		document.getElementById("ms-details").innerHTML = `${replies.length} repl${plurals}, ${attachments.length} attachment${plurals_b} - <span class="text-clickable" onclick="clearAll();">Remove all</span>`
+		document.getElementById("ms-details").innerHTML = `<span class="text-clickable" onclick="showReplies();">${replies.length} repl${plurals}</span>, ${attachments.length} attachment${plurals_b} - <span class="text-clickable" onclick="clearReplies();">Remove replies</span>, <span class="text-clickable" onclick="clearAttachments();">Remove attachments</span>`
 	};
 };
 
@@ -1185,14 +1202,27 @@ async function attachFile() {
 	updateDetailsMsg();
 };
 
-function reply(id) {
-	replies.push(id);
+function reply(id, msg) {
+	if (!replies.includes(id)) {
+		replies.push(id);
+		replies2.push(msg);
+	};
 	document.getElementById("ms-msg").focus();
 	updateDetailsMsg();
 };
 
-function clearAll() {
+function showReplies() {
+	document.getElementById("rd-display").textContent = replies2.join("\n");
+	switchScene('reply-display');
+};
+		
+function clearReplies() {
 	replies = [];
+	replies2 = [];
+	updateDetailsMsg();
+};
+
+function clearAttachments() {
 	attachments = [];
 	updateDetailsMsg();
 };
