@@ -1267,7 +1267,7 @@ function toggleLock() {
 };
 		
 function textinput() {
-	// will be used for future typing indicators
+	document.getElementById("ms-msg").value = document.getElementById("ms-msg").value.replace(/u\+([0-9a-fA-F]{5})/g, String.fromCodePoint("0x$1"))
 };
 
 function ping() {
