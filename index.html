@@ -1267,7 +1267,9 @@ function toggleLock() {
 };
 		
 function textinput() {
-	document.getElementById("ms-msg").value = document.getElementById("ms-msg").value.replace(/u\+([0-9a-fA-F]{5})/g, (match, hex) => String.fromCodePoint(parseInt(hex, 16)));
+	setTimeout(() => {
+		document.getElementById("ms-msg").value = document.getElementById("ms-msg").value.replace(/u\+([0-9a-fA-F]{5})/g, (match, hex) => String.fromCodePoint(parseInt(hex, 16)));
+	}, 100);
 };
 
 function ping() {
