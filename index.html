@@ -1287,15 +1287,15 @@ document.addEventListener("visibilitychange", () => {
 document.addEventListener("paste", (event) => {
 	var items = (event.clipboardData || event.originalEvent.clipboardData).items;
 	console.log(items);
-    var item = items[index];
-    if (item.kind === 'file') {
-        var blob = item.getAsFile();
-        var reader = new FileReader();
-        reader.onload = function (event) {
-            attachments.push(event.target.result);
-        }; 
-        reader.readAsDataURL(blob);
-    };
+    	var item = items[index];
+   	if (items[0].kind === 'file') {
+        	var blob = items[0].getAsFile();
+        	var reader = new FileReader();
+        	reader.onload = function (event) {
+            		console.log(event.target.result);
+        	}; 
+        	console.log(reader.readAsDataURL(blob));
+    	};
 	if (!document.querySelector("#ms-auto-newlines").checked) {
 		return;
 	};
