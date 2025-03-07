@@ -1285,16 +1285,17 @@ document.addEventListener("visibilitychange", () => {
 	};
 });
 document.addEventListener("paste", (event) => {
-	let items = (event.clipboardData || event.originalEvent.clipboardData).items;
-	console.log(items);
-   	if (items[0].kind === 'file') {
-        	var blob = items[0].getAsFile();
-        	var reader = new FileReader();
-		reader.onload = (event) => {console.log(event.target.result)};
-		console.log(reader.readAsDataURL(blob));
-        	attachments.push(reader.readAsDataURL(blob));
-		updateDetailsMsg();
-    	};
+	var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+    for (var index in items) {
+        var item = items[index];
+        if (item.kind === 'file') {
+            var blob = item.getAsFile();
+            var reader = new FileReader();
+            reader.onload = function (event) {
+				console.log(reader.readAsDataURL(blob));
+            };
+        }
+    }
 	if (!document.querySelector("#ms-auto-newlines").checked) {
 		return;
 	};
