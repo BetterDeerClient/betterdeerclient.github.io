@@ -1290,12 +1290,16 @@ document.addEventListener("paste", (event) => {
 		let item = items[index];
 		if (item.kind === 'file') {
 			let blob = item.getAsFile();
+			attachments.push(URL.createObjectURL(blob));
+			updateDetailsMsg();
+			`
 			let reader = new FileReader();
 			reader.onload = function (event) {
 				attachments.push(event.target.result);
 				updateDetailsMsg();
 			};
 			reader.readAsDataURL(blob);
+   			`
 		};
 	};
 	if (!document.querySelector("#ms-auto-newlines").checked) {
