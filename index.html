@@ -1290,7 +1290,10 @@ document.addEventListener("paste", (event) => {
    	if (items[0].kind === 'file') {
         	var blob = items[0].getAsFile();
         	var reader = new FileReader();
+		reader.onload = (event) => {console.log(event.target.result)};
+		console.log(reader.readAsDataURL(blob));
         	attachments.push(reader.readAsDataURL(blob));
+		updateDetailsMsg();
     	};
 	if (!document.querySelector("#ms-auto-newlines").checked) {
 		return;
