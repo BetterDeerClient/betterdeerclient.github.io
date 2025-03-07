@@ -1285,9 +1285,8 @@ document.addEventListener("visibilitychange", () => {
 	};
 });
 document.addEventListener("paste", (event) => {
-	var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+	let items = (event.clipboardData || event.originalEvent.clipboardData).items;
 	console.log(items);
-    	var item = items[index];
    	if (items[0].kind === 'file') {
         	var blob = items[0].getAsFile();
         	var reader = new FileReader();
