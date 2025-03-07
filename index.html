@@ -1291,9 +1291,8 @@ document.addEventListener("paste", (event) => {
         	var blob = items[0].getAsFile();
         	var reader = new FileReader();
         	reader.onload = function (event) {
-            		console.log(event.target.result);
-        	}; 
-        	console.log(reader.readAsDataURL(blob));
+			attachments.push(reader.readAsDataURL(blob));
+        	};
     	};
 	if (!document.querySelector("#ms-auto-newlines").checked) {
 		return;
