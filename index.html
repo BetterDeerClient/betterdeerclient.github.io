@@ -1285,12 +1285,12 @@ document.addEventListener("visibilitychange", () => {
 	};
 });
 document.addEventListener("paste", (event) => {
-	let items = (event.clipboardData || event.originalEvent.clipboardData).items;
+	var items = (event.clipboardData || event.originalEvent.clipboardData).items;
 	for (let index in items) {
-		let item = items[index];
+		var item = items[index];
 		if (item.kind === 'file') {
-			let blob = item.getAsFile();
-			let reader = new FileReader();
+			var blob = item.getAsFile();
+			var reader = new FileReader();
 			reader.onload = function (event) {
 				attachments.push(event.target.result);
 				updateDetailsMsg();
