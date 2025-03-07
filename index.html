@@ -1290,24 +1290,22 @@ document.addEventListener("paste", (event) => {
    	if (items[0].kind === 'file') {
         	var blob = items[0].getAsFile();
         	var reader = new FileReader();
-        	reader.onload = function (event) {
-			attachments.push(reader.readAsDataURL(blob));
-        	};
+        	attachments.push(reader.readAsDataURL(blob));
     	};
 	if (!document.querySelector("#ms-auto-newlines").checked) {
 		return;
 	};
 	navigator.permissions.query({name: "clipboard-read"}).then((result) => {
 		if (result.state !== 'denied') {
-            navigator.clipboard.readText().then((text) => {document.getElementById(event.target.id).value = text.replaceAll("\n", "\\n")});
+		navigator.clipboard.readText().then((text) => {document.getElementById(event.target.id).value = text.replaceAll("\n", "\\n")});
 			if (!localStorage.getItem("paste-reminder")) {
 				displayWarning("Please note that pasting text in ANY text box will remove all previous text in that box. Make sure you save all other text first!");
 				localStorage.setItem("paste-reminder", true);
 			};
-        } else {
-            displayError("Cannot automatically insert newlines because clipboard permission was denied");
-        };
-    });
+		} else {
+			displayError("Cannot automatically insert newlines because clipboard permission was denied");
+        	};
+    	});
 });
 
 setInterval(ping, 5000);
