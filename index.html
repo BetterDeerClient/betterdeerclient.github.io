@@ -1289,10 +1289,10 @@ document.addEventListener("paste", (event) => {
 	for (let index in items) {
 		let item = items[index];
 		if (item.kind === 'file') {
-			var blob = item.getAsFile();
-			var reader = new FileReader();
+			let blob = item.getAsFile();
+			let reader = new FileReader();
 			reader.onload = function (event) {
-				attachments.push(event.target.result, "event");
+				attachments.push(event.target.result);
 				updateDetailsMsg();
 			};
 		};
