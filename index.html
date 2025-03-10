@@ -1045,16 +1045,20 @@ function parseAllMarkdown() {
 		[/\*\*([^*\n]+)\*\*/g, '<b>$1</b>'], // bold
 		[/\[b]([^[]+)\[\/b]/g, '<b>$1</b>'], // bold bbcode
 		[/__([^_\n]+)__/g, '<ins>$1</ins>'], // underline
-		[/\[u]([^[]+)\[\/u]/g, '<ins>$1</ins>'], // underline bbcode
+		[/\[u]([^[]]+)\[\/u]/g, '<ins>$1</ins>'], // underline bbcode
 		[/\*([^*\n]+)\*/g, '<i>$1</i>'], // italic
 		[/_([^_\n]+)_/g, '<i>$1</i>'], // italic 2
 		[/\[i]([^[]+)\[\/i]/g, '<i>$1</i>'], // italic bbcode
 		[/~~([^~\n]+)~~/g, '<del>$1</del>'], // strikethrough
 		[/!\[([^[\]=]*)\]\((https?:\/\/[^\/]+\/[A-Za-z0-9.]+)\)/g, '<img src="$2" title="$1 (click to open in a new tab/window)" alt="$1" style="width: auto; height: 100px; cursor: pointer;" onclick="window.open(this.src, \'_blank\')">'], // inline image
+		[/\[img]([^[]+)\[\/img]/g, '<img src="$1" title="bbcode image">'], // italic bbcode
 		[/(`{1,3})([^`]+)\1/g, '<pre style="background-color: #333; color: #FFF; border-radius: 10px; padding: 10px; margin: 5px; white-space: pre-wrap; word-wrap: break-word;"><code>$2</code></pre>'], // [inline] code
 		[/\[code]([^[]+)\[\/code]/g, '<pre style="background-color: #333; color: #FFF; border-radius: 10px; padding: 10px; margin: 5px; white-space: pre-wrap; word-wrap: break-word;"><code>$2</code></pre>'], // code bbcode
 		[/\[([^\]=]+)\]\(([^\]]+)\)/g, '<a href="$2" style="color: #9CF; text-decoration: none;">$1</a>'], // link
+		[/\[url]([^[]+)\[\/url]/g, '<a href="$1" style="color: #9CF; text-decoration: none;">$1</a>'], // link bbcode
+		[/\[url=([A-z0-9-_.~%:\/]+)]([^[\\\n]+)\[\/url]/g, '<a href="$2" style="color: #9CF; text-decoration: none;">$1</a>'], // link bbcode part 2
 		[/\|\|([^\n]+?)\|\|/g, `<button style="border: none; cursor: default !important; background-color: #ede4d5 !important; color: ${settings.button_color}">$1</button>`], // spoiler text
+		[/\[spoiler]([^[\\\n]+)\[\/spoiler]/g, `<button style="border: none; cursor: default !important; background-color: #ede4d5 !important; color: ${settings.button_color}">$1</button>`], // spoilers bbcode
 		[/^# ((?:[^#\\\n](?!br>))+)/gm, '<h1>$1</h1>'], // header 1
 		[/^## ((?:[^#\\\n](?!br>))+)/gm, '<h2>$1</h2>'], // header 2
 		[/^### ((?:[^#\\\n](?!br>))+)/gm, '<h3>$1</h3>'], // header 3
@@ -1068,8 +1072,9 @@ function parseAllMarkdown() {
 		[/(?:(?:<br>)#{5} ((?:[^#\\\n](?!br>))+))/g, '<h5>$1</h5>'], // header 5 with <br>
 		[/(?:(?:<br>)#{6} ((?:[^#\\\n](?!br>))+))/g, '<h6>$1</h6>'], // header 6 with <br>
 		[/\[color=((?:[a-zA-Z]+)|(?:#[0-9a-fA-F]{3})|(?:#[0-9a-fA-F]{4})|(?:#[0-9a-fA-F]{6})|(?:#[0-9a-fA-F]{8}))]([^[]+)\[\/color]/g, '<span id="ms-post-content" style="color: $1;">$2</span>'], // color
-		[/^> (.+)/gm, '<blockquote style="border-left: 3px solid; padding: 10px;">$1</blockquote>'], // quote
-		[/\[quote]([^[]+)\[\/quote]/gm, '<blockquote style="border-left: 3px solid; padding: 10px;">$1</blockquote>'], // quote bbcode
+		[/^> ([^\\\n]+)$/gm, '<blockquote style="border-left: 3px solid; padding: 10px;">$1</blockquote>'], // quote
+		[/\[quote]([^[]+)\[\/quote]/g, '<blockquote style="border-left: 3px solid; padding: 10px;">$1</blockquote>'], // quote bbcode
+		[/\[size=([0-9]{1,3})]([^[]+)\[\/size]/g, '<span style="font-size: calc(16px * $1 / 100)">$2</span>'] // sizing
 	];
 	const divs = document.querySelectorAll('.post');
 	divs.forEach((div) => {
