@@ -950,7 +950,7 @@ function loadPost(resf, isFetch, isInbox) {
 		postUsername.innerHTML += ' <span class="mono">OWNER</span>';
 	};
 	let client = ulist2[resf.author.username]
-	if client.client {
+	if (client.client) {
 		postUsername.innerHTML += `<span class="mono">, ${ulist2[resf.author.username].client}</span>`;
 	} else {
 		postUsername.innerHTML += `<span class="mono">, the deep dark from minecraft</span>`;
