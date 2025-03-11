@@ -119,6 +119,7 @@
 				background-color: rgba(0, 0, 0, 0.8);
 				padding: 20px;
 				z-index: 1000;
+				overflow-y: scroll;
 			}
 			#reply-display {
 				position: fixed;
@@ -129,6 +130,7 @@
 				background-color: rgba(0, 0, 0, 0.8);
 				padding: 20px;
 				z-index: 1000;
+				overflow-y: scroll;
 			}
 			#ud-lastfm-container {
 				width: 80%;
@@ -708,8 +710,9 @@ ws.onmessage = (event) => {
 			document.getElementById("ms-button-inbox").innerText = "Inbox";
 		};
 	} else if (last_cmd == "get_user" && "user" in incoming) {
-		var bio;
-		if (incoming.user.bio == "") {bio = "No bio"} else {bio = incoming.user.bio};
+		let bio;
+		if (incoming.user.bio == "") {bio = "[tell this person to create a bio unless this is their bio!]"} else {bio = incoming.user.profile.bio};
+		if (incoming.user.profile.banner) {document.getElementById("user-display").style.setProperty("backgroundImage", `url(${banner})`, "important")} else {document.getElementById("user-display").style.removeProperty("backgroundImage")};
 		document.getElementById("ud-avatar").src = incoming.user.avatar;
 		document.getElementById("ud-display-name").innerHTML = `<b>${incoming.user.display_name}</b>`;
 		document.getElementById("ud-username").innerText = "@" + incoming.user.username;
@@ -724,7 +727,7 @@ ws.onmessage = (event) => {
 			idx += 1;
 		};
 		document.getElementById("ud-level").innerText = `Level ${level}`;
-		document.getElementById("ud-permissions2").textContent = `${incoming.user.permissions.toString().toLowerCase().replaceAll(",", "\n")}`;
+		document.getElementById("ud-permissions2").textContent = `${incoming.user.permissions.toString().toLowerCase().replaceAll(" ", "\n").replaceAll(",", "\n")}`;
 		document.getElementById("ud-special").innerHTML = "";
 		if (incoming.user.verified) {
 			document.getElementById("ud-special").innerHTML += "<br>Verified user";
@@ -745,7 +748,7 @@ ws.onmessage = (event) => {
 			document.getElementById("ud-banned").classList.add("hidden");
 		};
 		document.getElementById("ud-bio").innerText = bio;
-		if (incoming.user.lastfm) {
+		if (incoming.user.profile.lastfm) {
 			document.getElementById("ud-lastfm-container").classList.add("hidden");
 			var xhttp = new XMLHttpRequest();
 			xhttp.onreadystatechange = function() {
@@ -764,7 +767,7 @@ ws.onmessage = (event) => {
 					};
 				}
 			};
-			xhttp.open("GET", `https://lastfm-last-played.biancarosa.com.br/${incoming.user.lastfm}/latest-song`, true);
+			xhttp.open("GET", `https://lastfm-last-played.biancarosa.com.br/${incoming.user.profile.lastfm}/latest-song`, true);
 			xhttp.send();
 		} else {
 			document.getElementById("ud-lastfm-container").classList.add("hidden")
