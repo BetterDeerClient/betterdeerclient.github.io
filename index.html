@@ -950,9 +950,9 @@ function loadPost(resf, isFetch, isInbox) {
 		postUsername.innerHTML += ' <span class="mono">OWNER</span>';
 	};
 	let client = ulist2[resf.author.username]
-	if (client.client) {
+	try {
 		postUsername.innerHTML += `<span class="mono">, ${ulist2[resf.author.username].client}</span>`;
-	} else {
+	} catch (e) {
 		postUsername.innerHTML += `<span class="mono">, the deep dark from minecraft</span>`;
 	};
 	postUsername.setAttribute("onclick", `showUser("${resf.author.username}");`);
