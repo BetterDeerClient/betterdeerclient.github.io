@@ -13,7 +13,7 @@
 				size-adjust: 130%;
 			}
 			body {
-				font-family: 'Montserrat', sans-serif;
+				font-family: 'Montserrat', sans-serif, "sitelen seli kiwen";
 				margin: 0px;
 				background-color: #000016;
 				color: #ede4d5;
@@ -25,7 +25,7 @@
 				border: none;
 				border-radius: 16px;
 				padding: 9px;
-				font-family: 'Montserrat', sans-serif;
+				font-family: 'Montserrat', sans-serif, "sitelen seli kiwen";
 				margin: 4px;
 			}
 			button:hover {
@@ -39,7 +39,7 @@
 				border: none;
 				border-radius: 16px;
 				padding: 9px;
-				font-family: 'Montserrat', sans-serif;
+				font-family: 'Montserrat', sans-serif, "sitelen seli kiwen";
 				margin: 4px;
 			}
 			.scene {
@@ -953,7 +953,11 @@ function loadPost(resf, isFetch, isInbox) {
 	if (["cole", "cole_mobile", "melt", "meltland", "oxford"].includes(resf.author.username)) {
 		postUsername.innerHTML += ' <span class="mono">OWNER</span>';
 	};
-	postUsername.innerHTML += ` <span class="mono">, ${ulist2[resf.author.username]}</span>`;
+	try {
+		postUsername.innerHTML += `<span class="mono">, ${ulist2[resf.author.username].client}</span>`;
+	} catch (e) {
+		postUsername.innerHTML += `<span class="mono">, the deep dark from minecraft}</span>`;
+	}
 	postUsername.setAttribute("onclick", `showUser("${resf.author.username}");`);
 	postUsername.classList.add("clickable");
 	post.appendChild(postUsername);
