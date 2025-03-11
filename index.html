@@ -5,17 +5,15 @@
 		<meta name="mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<meta charset="UTF-8">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<style>
 			@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
-			*:not(.fa):not(.fas):not(.far):not(.fal):not(.fad):not(.fab) {
-				font-family: 'Montserrat', sans-serif !important;
-			}
-			.fa, .fas, .far, .fal, .fad, .fab {
-				font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands", "Font Awesome 5 Free", "Font Awesome 5 Brands", "Font Awesome 4 Free", "Font Awesome 4 Brands";
+			@font-face {
+				font-family: "sitelen seli kiwen";
+				src: url("https://mybearworld.github.io/beardeer/assets/sitelenselikiwen/sitelenselikiwenjuniko.ttf");
+				size-adjust: 130%;
 			}
 			body {
-				font-family: 'Montserrat', sans-serif !important;
+				font-family: 'Montserrat', sans-serif;
 				margin: 0px;
 				background-color: #000016;
 				color: #ede4d5;
@@ -27,7 +25,7 @@
 				border: none;
 				border-radius: 16px;
 				padding: 9px;
-				font-family: 'Noto Sans', sans-serif;
+				font-family: 'Montserrat', sans-serif;
 				margin: 4px;
 			}
 			button:hover {
@@ -41,7 +39,7 @@
 				border: none;
 				border-radius: 16px;
 				padding: 9px;
-				font-family: 'Noto Sans', sans-serif;
+				font-family: 'Montserrat', sans-serif;
 				margin: 4px;
 			}
 			.scene {
@@ -209,15 +207,15 @@
 		<div id="loading"><center>Taking too long to load? Try <span onclick="logOut();" class="text-clickable">a full reset</span>.</center></div>
 		<div id="connection-lost" class="hidden">
 			<center>Connection was lost.<br>
-			<span onclick="window.location.reload();" class="text-clickable"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M463.5 224l8.5 0c13.3 0 24-10.7 24-24l0-128c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1c-87.5 87.5-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8l119.5 0z"/></svg></i> Reload</span>.<br><br>
+			<span onclick="window.location.reload();" class="text-clickable">Reload</span>.<br><br>
 			<small><a href="https://status.uptime-monitor.io/675625ba72974e1ee251f1f3">Status page</a></small></center>
 		</div>
 		<div id="register-login" class="hidden"><center>
 			<input id="rl-username" placeholder="Username..." type="text" maxlength=20><br>
 			<input id="rl-password" placeholder="Password..." type="password"><br>
 			<input id="rl-invitecode" placeholder="Invite code..." type="text" maxlength=16><br>
-			<button onclick="logIn();"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M352 96l64 0c17.7 0 32 14.3 32 32l0 256c0 17.7-14.3 32-32 32l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l64 0c53 0 96-43 96-96l0-256c0-53-43-96-96-96l-64 0c-17.7 0-32 14.3-32 32s14.3 32 32 32zm-9.4 182.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L242.7 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128z"/></svg> Login</i></button> 
-			<button onclick="register();"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304l91.4 0C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7L29.7 512C13.3 512 0 498.7 0 482.3zM504 312l0-64-64 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l64 0 0-64c0-13.3 10.7-24 24-24s24 10.7 24 24l0 64 64 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-64 0 0 64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"/></svg> Register</button><br><br>
+			<button onclick="logIn();">Log in</button> 
+			<button onclick="register();">Register</button><br><br>
 			<small>(You will need to provide an invite code when registering.)</small><br>
 			<small>If you're registering, you'll need to read <a href="https://soktdeer.fraudulent.loan/guidelines" style="color: #ede4d5;">these</a>,
 			<br>but not if you're just logging in.</small><br>
@@ -225,20 +223,20 @@
 			<small><a href="https://speedbee411.neocities.org">Don't know what this is?</a></small>
 		</center></div>
 		<div id="main-scene" class="hidden">
-			<button id="ms-name" onclick="document.querySelector('#ms-dropdown').classList.toggle('hidden')">@...</button> | <button onclick="switchScene('main-inbox');" id="ms-button-inbox"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48L48 64zM0 176L0 384c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-208L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></svg></button><br>
+			<button id="ms-name" onclick="document.querySelector('#ms-dropdown').classList.toggle('hidden')">@...</button> | <button onclick="switchScene('main-inbox');" id="ms-button-inbox">Inbox</button><br>
 			<div id="ms-dropdown" class="hidden">
-				<button onclick="showUser(username);"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"/></svg></i></button>
-				<button onclick="switchScene('main-config');"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-4.4 11.9-9.7 23.3-15.8 34.3l-4.7 8.1c-6.6 11-14 21.4-22.1 31.2c-5.9 7.2-15.7 9.6-24.5 6.8l-55.7-17.7c-13.4 10.3-28.2 18.9-44 25.4l-12.5 57.1c-2 9.1-9 16.3-18.2 17.8c-13.8 2.3-28 3.5-42.5 3.5s-28.7-1.2-42.5-3.5c-9.2-1.5-16.2-8.7-18.2-17.8l-12.5-57.1c-15.8-6.5-30.6-15.1-44-25.4L83.1 425.9c-8.8 2.8-18.6 .3-24.5-6.8c-8.1-9.8-15.5-20.2-22.1-31.2l-4.7-8.1c-6.1-11-11.4-22.4-15.8-34.3c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C64.6 273.1 64 264.6 64 256s.6-17.1 1.7-25.4L22.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c4.4-11.9 9.7-23.3 15.8-34.3l4.7-8.1c6.6-11 14-21.4 22.1-31.2c5.9-7.2 15.7-9.6 24.5-6.8l55.7 17.7c13.4-10.3 28.2-18.9 44-25.4l12.5-57.1c2-9.1 9-16.3 18.2-17.8C227.3 1.2 241.5 0 256 0s28.7 1.2 42.5 3.5c9.2 1.5 16.2 8.7 18.2 17.8l12.5 57.1c15.8 6.5 30.6 15.1 44 25.4l55.7-17.7c8.8-2.8 18.6-.3 24.5 6.8c8.1 9.8 15.5 20.2 22.1 31.2l4.7 8.1c6.1 11 11.4 22.4 15.8 34.3zM256 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160z"/></svg></i></button>
-				<button id="ms-button-mod" class="hidden" onclick="switchScene('main-moderation');"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M256 0c4.6 0 9.2 1 13.4 2.9L457.7 82.8c22 9.3 38.4 31 38.3 57.2c-.5 99.2-41.3 280.7-213.6 363.2c-16.7 8-36.1 8-52.8 0C57.3 420.7 16.5 239.2 16 140c-.1-26.2 16.3-47.9 38.3-57.2L242.7 2.9C246.8 1 251.4 0 256 0z"/></svg></button>
-				<button onclick="logOut();"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M502.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-128-128c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 224 192 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l210.7 0-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l128-128zM160 96c17.7 0 32-14.3 32-32s-14.3-32-32-32L96 32C43 32 0 75 0 128L0 384c0 53 43 96 96 96l64 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-64 0c-17.7 0-32-14.3-32-32l0-256c0-17.7 14.3-32 32-32l64 0z"/></svg></button>
+				<button onclick="showUser(username);">View Profile</button>
+				<button onclick="switchScene('main-config');">Settings</button>
+				<button id="ms-button-mod" class="hidden" onclick="switchScene('main-moderation');">Moderation</button>
+				<button onclick="logOut();">Log out</button>
 			</div>
 			<small id="ms-ulist">0 users online ()</small><br><br>
 			<center>
-				<button onclick="addAttachment();"><i class="fa-solid fa-link"></i></button>
-				<button onclick="addUpload();"><i class="fa-solid fa-arrow-up-from-bracket"></i></button>
-				<button onclick="switchScene('command-picker')"><i class="fa-solid fa-terminal"></i></button>
+				<button onclick="addAttachment();">Attach URL</button>
+				<button onclick="addUpload();">Upload File</button>
+				<button onclick="switchScene('command-picker')">Command Picker</button>
 				<input id="ms-msg" maxlength="2500" onforminput="textinput();" autocomplete="off" onkeydown="if (event.keyCode == 13) {if (event.shiftKey) {document.getElementById('ms-msg').value += '\\n'} else if (document.getElementById('ms-msg').value.length > 0 || attachments.length > 0) {sendPost()}}" placeholder="Enter post contents here..." type="text">
-				<button id="ms-button-post" onclick="sendPost();"><i class="fa-solid fa-paper-plane"></i></button><br>
+				<button id="ms-button-post" onclick="sendPost();">Post</button><br>
 				<input type="checkbox" id="ms-auto-newlines" value="auto-newlines">
 				<label for="ms-auto-newlines">Automatically add newlines?</label><br>
 				<small id="ms-details"></small><hr>
@@ -247,30 +245,30 @@
 			<input class="hidden" id="ms-attach" onchange="attachFile();" multiple="true" type="file">
 		</div>
 		<div id="main-config" class="hidden">
-			<button onclick="switchScene('main-scene');"><i class="fa-solid fa-xmark"></i></button><br>
+			<button onclick="switchScene('main-scene');">Close Settings</button><br>
 			<h2><b>Profile</b></h2>
 			<label for="mc-display-name">Display name:</label>
 			<input id="mc-display-name" placeholder="Display name..." type="text" maxlength=20>
-			<button onclick="setDisplayName();"><i class="fa-solid fa-paper-plane"></i></button><br>
+			<button onclick="setDisplayName();">Set display name</button><br>
 			<label for="mc-avatar">Avatar URL:</label>
 			<input id="mc-avatar" placeholder="Avatar URL..." type="text" maxlength=656>
-			<button onclick="setAvatar();"><i class="fa-solid fa-paper-plane"></i></button><br>
+			<button onclick="setAvatar();">Set avatar URL</button><br>
 			<label for="mc-bio">Bio:</label>
 			<input id="mc-bio" placeholder="Bio..." type="text" maxlength=512>
-			<button onclick="setBio();"><i class="fa-solid fa-paper-plane"></i></button><br>
+			<button onclick="setBio();">Set bio</button><br>
 			<label for="mc-imgbb">ImgBB API key:</label>
 			<input id="mc-imgbb" placeholder="ImgBB API key..." type="text" maxlength=32>
-			<button onclick="updateStg('imgbb_key');"><i class="fa-solid fa-paper-plane"></i></button><br>
+			<button onclick="updateStg('imgbb_key');">Set ImgBB API key</button><br>
 			<label for="mc-lastfm">Last.fm username:</label>
-			<input id="mc-lastfm" placeholder="Last.fm username..." type="text" maxlength=72>
-			<button onclick="setLastfm();"><i class="fa-solid fa-paper-plane"></i></button>
+			<input id="mc-lastfm" placeholder="Last.fm..." type="text" maxlength=72>
+			<button onclick="setLastfm();">Set last.fm</button>
 			<h2><b>BetterDeer</b></h2>
 			<input id="mc-bg-color" type="color" value="#2e2d2b"><input id="mc-bg-color2" type="color" value="#2e2d2b">
-			<button onclick="updateStg('bg_color');"><i class="fa-solid fa-paper-plane"></i></button><br>
+			<button onclick="updateStg('bg_color');">Set Background Color</button><br>
 			<input id="mc-post-color" type="color" value="#403d39"><input id="mc-post-color2" type="color" value="#403d39">
-			<button onclick="updateStg('post_color');"><i class="fa-solid fa-paper-plane"></i></button><br>
+			<button onclick="updateStg('post_color');">Set Post Background Color</button><br>
 			<input id="mc-button-color" type="color" value="#ede4d5"><input id="mc-button-color2" type="color" value="#ede4d5">
-			<button onclick="updateStg('button_color');"><i class="fa-solid fa-paper-plane"></i></button><br>
+			<button onclick="updateStg('button_color');">Set Button Color</button><br>
 			<button id="mc-glow" onclick="updateStg('glow')">Unable to get picture glow setting</button><br>
 			<label for="mc-blockuser">Username:</label>
 			<input id="mc-blockuser" placeholder="Username..." type="text" maxlength=20>
@@ -293,12 +291,12 @@
 			<small id="mc-version"></small>
 		</div>
 		<div id="main-inbox" class="hidden">
-			<button onclick="switchScene('main-scene');"><i class="fa-solid fa-xmark"></i></button><br>
+			<button onclick="switchScene('main-scene');">Close Inbox</button><br>
 			<h2>Inbox</h2>
 			<div id="mi-posts"></div>
 		</div>
 		<div id="main-moderation" class="hidden">
-			<button onclick="switchScene('main-scene');"><i class="fa-solid fa-xmark"></i></button><br>
+			<button onclick="switchScene('main-scene');">Close Moderation</button><br>
 			<h2><b>Ban (Prevents users from logging in)</b></h2>
 			<label for="mm-username-ban">Username:</label><input id="mm-username-ban" placeholder="Username..." type="text"><br>
 			<label for="mm-until-ban">Lasts until:</label><input id="mm-until-ban" type="datetime-local"><br>
@@ -327,7 +325,7 @@
             <button onclick="toggleLock();">Toggle server lock</button>
 		</div>
 		<div id="user-display" class="hidden">
-			<button style="float: right; padding: 10px; border-radius: 4px;" onclick="switchScene('main-scene');"><i class="fa-solid fa-xmark"></i></button><br>
+			<button style="float: right; padding: 10px; border-radius: 4px;" onclick="switchScene('main-scene');">✖</button><br>
 			<img id="ud-avatar" class="pfp" src="https://deer.fraudulent.loan/assets/default.png" onerror="this.src = 'https://deer.fraudulent.loan/assets/default.png'">
 			<span id="ud-display-name"></span><br>
 			<span id="ud-username" class="mono"></span><br>
@@ -337,7 +335,7 @@
 			<span id="ud-permissions2" class="hidden"></span>
 			<small id="ud-special"></small><br>
 			<span id="ud-banned" class="hidden"><small id="ud-banned-span"></small><br></span>
-			<div id="ud-bio-container" style="float: inline-start"><b>Bio</b><br><span id="ud-bio">[tell them to make a bio!]</span></div>
+			<div id="ud-bio-container" style="float: inline-start"><b>Bio</b><br><span id="ud-bio">No bio</span></div>
 			<div id="ud-lastfm-container" style="float: inline-end">
 				<img id="ud-lastfm-cover" class="album-cover" src="https://deer.fraudulent.loan/assets/default.png" onerror="this.src = 'https://deer.fraudulent.loan/assets/default.png'">
 				<span id="ud-lastfm-name"></span><br>
@@ -353,7 +351,7 @@
 		<div id="command-picker" class="hidden">
 			<button style="float: right; padding: 10px; border-radius: 4px;" onclick="switchScene('main-scene')">✖</button>
 			<h1>Command Picker</h1>
-			<span>You can request your bot to be added here.</span><hr>
+			<span>Commands from bots that use deerbot.py are listed here.<br>You can request your bot to be added here.</span><hr>
 			<h2>Sb4bot</h2>
 			<button onclick="document.getElementById('ms-msg').value = '@Sb4bot help'; switchScene('main-scene')">Detailed command info</button>
 			<button onclick="document.getElementById('ms-msg').value = '@Sb4bot rps <choice: rock|paper|scissors>'; switchScene('main-scene')">Rock paper scissors</button>
@@ -374,7 +372,7 @@ document.getElementById("rl-username").value = "";
 document.getElementById("rl-password").value = "";
 document.getElementById("rl-invitecode").value = "";
 
-function displayError(errText) {
+function displayError (errText) {
 	document.getElementById("error-text").innerText = errText;
 	document.getElementById("error-bar").classList.remove("hidden");
 	if (!errText.includes("Loading")) {
@@ -394,8 +392,8 @@ function closeErrors() {
 	document.getElementById("error-bar").classList.add("hidden");
 };
 
-const version = "1.6.0b";
-const serverVersion = "Helium-1.0.0a";
+const version = "1.5.0b";
+const serverVersion = "Sokt-1.5.3b";
 let last_cmd = "";
 let username = "";
 let logged_in = false;
@@ -729,16 +727,16 @@ ws.onmessage = (event) => {
 		document.getElementById("ud-permissions2").textContent = `${incoming.user.permissions.toString().toLowerCase().replaceAll(",", "\n")}`;
 		document.getElementById("ud-special").innerHTML = "";
 		if (incoming.user.verified) {
-			document.getElementById("ud-special").innerHTML += "<br><i class='fa-solid fa-user-check'> Verified</i>";
+			document.getElementById("ud-special").innerHTML += "<br>Verified user";
 		};
 		if (incoming.user.bot) {
-			document.getElementById("ud-special").innerHTML += "<br><i class='fa-solid fa-robot'></i> Bot";
+			document.getElementById("ud-special").innerHTML += "<br>Bot user";
 		};
 		if (["sb4bot"].includes(incoming.user.username)) { // the reason this is a list is to allow for more bots
 			document.getElementById("ud-special").innerHTML += "<br>Supports BetterDeer command picker";
 		};
 		if (incoming.user.username == "speedbee411") {
-			document.getElementById("ud-special").innerHTML += "<br>✨Creator of BetterDeer";
+			document.getElementById("ud-special").innerHTML += "<br>Creator of BetterDeer";
 		}
 		if (incoming.user.banned_until > new Date().getTime() / 1000) {
 			document.getElementById("ud-banned-span").innerText = `Banned until ${new Date(incoming.user.banned_until * 1000).toLocaleString()}`;
@@ -947,20 +945,15 @@ function loadPost(resf, isFetch, isInbox) {
 	var postUsername = document.createElement("span");
 	postUsername.innerHTML = `<b>${resf.author.display_name}</b> (<span class="mono">@${resf.author.username}</span>)`;
 	if (resf.author.verified) {
-		postUsername.innerHTML += ' <i class="fa-solid fa-user-check"></i>';
+		postUsername.innerHTML += ' <span class="mono">VERIFIED</span>';
 	};
 	if (resf.author.bot) {
-		postUsername.innerHTML += ' <i class="fa-solid fa-robot"></i>';
+		postUsername.innerHTML += ' <span class="mono">BOT</span>';
 	};
-	if (["cole", "cole_mobile", "melt", "meltland", "oxford", "coletestacc"].includes(resf.author.username)) {
+	if (["cole", "cole_mobile", "melt", "meltland", "oxford"].includes(resf.author.username)) {
 		postUsername.innerHTML += ' <span class="mono">OWNER</span>';
 	};
-	let client = ulist2[resf.author.username]
-	try {
-		postUsername.innerHTML += `<span class="mono">, ${ulist2[resf.author.username].client}</span>`;
-	} catch (e) {
-		postUsername.innerHTML += `<span class="mono">, the deep dark from minecraft</span>`;
-	};
+	postUsername.innerHTML += ` <span class="mono">, ${ulist2[resf.author.username]}</span>`;
 	postUsername.setAttribute("onclick", `showUser("${resf.author.username}");`);
 	postUsername.classList.add("clickable");
 	post.appendChild(postUsername);
@@ -1337,5 +1330,4 @@ document.addEventListener("paste", (event) => {
 
 setInterval(ping, 5000);
 </script>
-<script src="https://kit.fontawesome.com/55b93f99ee.js" crossorigin="anonymous"></script>
 </html>
