@@ -723,10 +723,10 @@ ws.onmessage = (event) => {
 		document.getElementById("ud-permissions2").textContent = `${incoming.user.permissions.toString().toLowerCase().replaceAll(",", "\n")}`;
 		document.getElementById("ud-special").innerHTML = "";
 		if (incoming.user.verified) {
-			document.getElementById("ud-special").innerHTML += "<br><i class="fa-solid fa-user-check"></i>";
+			document.getElementById("ud-special").innerHTML += "<br><i class='fa-solid fa-user-check'> Verified</i>";
 		};
 		if (incoming.user.bot) {
-			document.getElementById("ud-special").innerHTML += "<br><i class="fa-solid fa-robot"></i>Bot user";
+			document.getElementById("ud-special").innerHTML += "<br><i class='fa-solid fa-robot'></i> Bot";
 		};
 		if (["sb4bot"].includes(incoming.user.username)) { // the reason this is a list is to allow for more bots
 			document.getElementById("ud-special").innerHTML += "<br>Supports BetterDeer command picker";
