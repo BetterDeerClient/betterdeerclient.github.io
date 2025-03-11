@@ -388,8 +388,8 @@ function closeErrors() {
 	document.getElementById("error-bar").classList.add("hidden");
 };
 
-const version = "1.5.0b";
-const serverVersion = "Sokt-1.5.7b";
+const version = "1.6.0b";
+const serverVersion = "Helium-1.0.0a";
 let last_cmd = "";
 let username = "";
 let logged_in = false;
@@ -949,7 +949,12 @@ function loadPost(resf, isFetch, isInbox) {
 	if (["cole", "cole_mobile", "melt", "meltland", "oxford", "coletestacc"].includes(resf.author.username)) {
 		postUsername.innerHTML += ' <span class="mono">OWNER</span>';
 	};
-	postUsername.innerHTML += `<span class="mono">, ${ulist2[resf.author.username].client}</span>`;
+	let client = ulist2[resf.author.username]
+	if client.client {
+		postUsername.innerHTML += `<span class="mono">, ${ulist2[resf.author.username].client}</span>`;
+	} else {
+		postUsername.innerHTML += `<span class="mono">, the deep dark from minecraft</span>`;
+	};
 	postUsername.setAttribute("onclick", `showUser("${resf.author.username}");`);
 	postUsername.classList.add("clickable");
 	post.appendChild(postUsername);
