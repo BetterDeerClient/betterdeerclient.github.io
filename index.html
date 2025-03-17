@@ -1166,14 +1166,14 @@ function updateDetailsMsg() {
 	if (replies.length == 0 && attachments.length == 0) {
 		document.getElementById("ms-details").innerText = ""
 	} else if (replies.length == 0) {
-		if (attachments.length == 1) {let plurals = ""} else {let plurals = "s"}
+		if (attachments.length == 1) {var plurals = ""} else {var plurals = "s"}
 		document.getElementById("ms-details").innerHTML = `${attachments.length} attachment${plurals} - <span class="text-clickable" onclick="clearAttachments();">Remove attachments</span>`
 	} else if (attachments.length == 0) {
-		if (replies.length == 1) {let plurals = "y"} else {let plurals = "ies"} 
+		if (replies.length == 1) {var plurals = "y"} else {var plurals = "ies"} 
 		document.getElementById("ms-details").innerHTML = `<span class="text-clickable" onclick="showReplies();" title="Click to show all replies">${replies.length} repl${plurals}</span> - <span class="text-clickable" onclick="clearReplies();">Remove replies</span>`
 	} else {
-		if (replies.length == 1) {let plurals = "y"} else {let plurals = "ies"}
-		if (attachments.length == 1) {let plurals_b = ""} else {let plurals_b = "s"}
+		if (replies.length == 1) {var plurals = "y"} else {var plurals = "ies"}
+		if (attachments.length == 1) {var plurals_b = ""} else {var plurals_b = "s"}
 		document.getElementById("ms-details").innerHTML = `<span class="text-clickable" onclick="showReplies();" title="Click to show all replies">${replies.length} repl${plurals}</span>, ${attachments.length} attachment${plurals_b} - <span class="text-clickable" onclick="clearReplies();">Remove replies</span>, <span class="text-clickable" onclick="clearAttachments();">Remove attachments</span>`
 	};
 };
