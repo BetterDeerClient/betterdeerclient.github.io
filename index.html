@@ -1134,13 +1134,13 @@ function resetInvites() {
 
 function setDisplayName() {
 	last_cmd = "set_display_name";
-	ws.send(JSON.stringify({command: "set_display_name", display_name: document.getElementById("mc-display-name").value}))
+	ws.send(JSON.stringify({command: "set_property", property: "display_name", value: document.getElementById("mc-display-name").value}))
 	document.getElementById("mc-display-name").value = "";
 };
 
 function setAvatar() {
 	last_cmd = "set_avatar";
-	ws.send(JSON.stringify({command: "set_avatar", avatar: document.getElementById("mc-avatar").value}))
+	ws.send(JSON.stringify({command: "set_property", property: "avatar", value: document.getElementById("mc-avatar").value}))
 	document.getElementById("mc-avatar").value = "";
 };
 
@@ -1152,13 +1152,13 @@ function setBio() {
 			bio = bio.replaceAll(i, text_replacements[i]);
 		};
 	};
-	ws.send(JSON.stringify({command: "set_bio", bio: bio}))
+	ws.send(JSON.stringify({command: "set_property", property: "bio", value: bio}))
 	document.getElementById("mc-bio").value = "";
 };
 
 function setLastfm() {
 	last_cmd = "set_lastfm";
-	ws.send(JSON.stringify({command: "set_lastfm", lastfm: document.getElementById("mc-lastfm").value}))
+	ws.send(JSON.stringify({command: "set_property", property: "lastfm", value: document.getElementById("mc-lastfm").value}))
 	document.getElementById("mc-lastfm").value = "";
 };
 
@@ -1166,14 +1166,14 @@ function updateDetailsMsg() {
 	if (replies.length == 0 && attachments.length == 0) {
 		document.getElementById("ms-details").innerText = ""
 	} else if (replies.length == 0) {
-		if (attachments.length == 1) {var plurals = ""} else {var plurals = "s"}
+		if (attachments.length == 1) {let plurals = ""} else {let plurals = "s"}
 		document.getElementById("ms-details").innerHTML = `${attachments.length} attachment${plurals} - <span class="text-clickable" onclick="clearAttachments();">Remove attachments</span>`
 	} else if (attachments.length == 0) {
-		if (replies.length == 1) {var plurals = "y"} else {var plurals = "ies"} 
+		if (replies.length == 1) {let plurals = "y"} else {let plurals = "ies"} 
 		document.getElementById("ms-details").innerHTML = `<span class="text-clickable" onclick="showReplies();" title="Click to show all replies">${replies.length} repl${plurals}</span> - <span class="text-clickable" onclick="clearReplies();">Remove replies</span>`
 	} else {
-		if (replies.length == 1) {var plurals = "y"} else {var plurals = "ies"}
-		if (attachments.length == 1) {var plurals_b = ""} else {var plurals_b = "s"}
+		if (replies.length == 1) {let plurals = "y"} else {let plurals = "ies"}
+		if (attachments.length == 1) {let plurals_b = ""} else {let plurals_b = "s"}
 		document.getElementById("ms-details").innerHTML = `<span class="text-clickable" onclick="showReplies();" title="Click to show all replies">${replies.length} repl${plurals}</span>, ${attachments.length} attachment${plurals_b} - <span class="text-clickable" onclick="clearReplies();">Remove replies</span>, <span class="text-clickable" onclick="clearAttachments();">Remove attachments</span>`
 	};
 };
