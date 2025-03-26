@@ -674,128 +674,129 @@ ws.onmessage = (event) => {
 		case "edited_post":
 			editedpost(incoming._id, incoming.content)
 			break;
-	if ("error" in incoming) {
-		if (incoming.error) {
-			if (incoming.code == "banned") {
-				displayError(`Account is banned until ${new Date(incoming.banned_until * 1000).toLocaleString()} for "${incoming.ban_reason}"`)
-			} else {
-				displayError(`Error: ${incoming.code} (${incoming.form})`);
-			};
-		} else if (last_cmd == "login_token" || last_cmd == "login_pswd") {
-			if (scene == "register-login") {
-				document.getElementById("register-login").classList.toggle("hidden");
-			} else if (scene == "loading") {
-				document.getElementById("loading").classList.toggle("hidden");
-			};
-			scene = "main-scene";
-			if ([JSON.stringify([]), JSON.stringify(["POST"])].includes(JSON.stringify(incoming.user.permissions))) {
-				document.getElementById("ms-button-mod").classList.add("hidden");
-			} else {
-				document.getElementById("ms-button-mod").classList.remove("hidden");
-			};
-			document.getElementById("main-scene").classList.toggle("hidden");
-			document.getElementById("ms-name").innerText = `@${username}`
-			last_cmd = "get_inbox"
-			ws.send(JSON.stringify({command: "get_inbox"}))
-		};
-	};
-	if ("token" in incoming && incoming.listener == "RegisterLoginPswdListener") {
-		localStorage.setItem("username", username);
-		localStorage.setItem("token", incoming.token);
-		if (last_cmd == "register") {
-			window.location.reload();
-		};
-		logged_in = true;
-	} else if (last_cmd == "gen_invite" && "invite_code" in incoming) {
-		document.getElementById("mm-invite-code").innerText = `Your invite code is "${incoming.invite_code}". Use it on any SoktDeer client to sign up!\n\nAll available codes: ${incoming.invite_codes}`
-	} else if (last_cmd == "get_inbox" && "inbox" in incoming) {
-		document.getElementById("mi-posts").innerHTML = ""
-		for (const i in incoming.inbox) {
-			loadPost(incoming.inbox[i], true, true);
-		};
-		if (localStorage.getItem("last_inbox_id") != incoming.inbox[0].id) {
-			document.getElementById("ms-button-inbox").innerText = "Inbox*";
-			localStorage.setItem("last_inbox_id", incoming.inbox[0].id)
-		} else {
-			document.getElementById("ms-button-inbox").innerText = "Inbox";
-		};
-	} else if (last_cmd == "get_user" && "user" in incoming) {
-		let bio;
-		if (incoming.user.bio == "") {bio = "[tell this person to create a bio unless this is their bio!]"} else {bio = incoming.user.profile.bio};
-		if (incoming.user.profile.banner) {document.getElementById("user-display").style.setProperty("backgroundImage", `url(${banner})`, "important")} else {document.getElementById("user-display").style.removeProperty("backgroundImage")};
-		document.getElementById("ud-avatar").src = incoming.user.avatar;
-		document.getElementById("ud-display-name").innerHTML = `<b>${incoming.user.display_name}</b>`;
-		document.getElementById("ud-username").innerText = "@" + incoming.user.username;
-		document.getElementById("ud-created").innerText = `Created on ${new Date(incoming.user.created * 1000)}`;
-		let level = 0;
-		const permissions = ["POST", "INVITE", "INBOX", "CLEAR_HOME", "KICK", "BAN", "PROTECTED"];
-		let idx = 0;
-		for (let permission of permissions) {
-			if (incoming.user.permissions.includes(permission)) {
-				level += 2 ** idx;
-			};
-			idx += 1;
-		};
-		document.getElementById("ud-level").innerText = `Level ${level}`;
-		document.getElementById("ud-permissions2").textContent = `${incoming.user.permissions.toString().toLowerCase().replaceAll(" ", "\n").replaceAll(",", "\n")}`;
-		document.getElementById("ud-special").innerHTML = "";
-		if (incoming.user.verified) {
-			document.getElementById("ud-special").innerHTML += "<br>Verified user";
-		};
-		if (incoming.user.bot) {
-			document.getElementById("ud-special").innerHTML += "<br>Bot user";
-		};
-		if (["sb4bot"].includes(incoming.user.username)) { // the reason this is a list is to allow for more bots
-			document.getElementById("ud-special").innerHTML += "<br>Supports BetterDeer command picker";
-		};
-		if (incoming.user.username == "speedbee411") {
-			document.getElementById("ud-special").innerHTML += "<br>Creator of BetterDeer";
-		}
-		if (incoming.user.banned_until > new Date().getTime() / 1000) {
-			document.getElementById("ud-banned-span").innerText = `Banned until ${new Date(incoming.user.banned_until * 1000).toLocaleString()}`;
-			document.getElementById("ud-banned").classList.remove("hidden");
-		} else {
-			document.getElementById("ud-banned").classList.add("hidden");
-		};
-		document.getElementById("ud-bio").innerText = bio;
-		if (incoming.user.profile.lastfm) {
-			document.getElementById("ud-lastfm-container").classList.add("hidden");
-			var xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function() {
-				if (this.readyState == 4 && this.status == 200) {
-					var lfm = JSON.parse(xhttp.responseText);
-					if (!"track" in lfm) {
-						document.getElementById("ud-lastfm-container").classList.add("hidden");
-					} else if (lfm.track["@attr"] && lfm.track["@attr"].nowplaying) {
-						document.getElementById("ud-lastfm-container").classList.remove("hidden")
-						document.getElementById("ud-lastfm-cover").src = lfm.track.image[lfm.track.image.length - 1]["#text"];
-						document.getElementById("ud-lastfm-name").innerHTML = `<b>${DOMPurify.sanitize(lfm.track.name)}</b>`;
-						document.getElementById("ud-lastfm-album").innerHTML = `on <b>${DOMPurify.sanitize(lfm.track.album["#text"])}</b>`;
-						document.getElementById("ud-lastfm-artist").innerHTML = `by <b>${DOMPurify.sanitize(lfm.track.artist["#text"])}</b>`;
-					} else {
-						document.getElementById("ud-lastfm-container").classList.add("hidden");
-					};
-				}
-			};
-			xhttp.open("GET", `https://lastfm-last-played.biancarosa.com.br/${incoming.user.profile.lastfm}/latest-song`, true);
-			xhttp.send();
-		} else {
-			document.getElementById("ud-lastfm-container").classList.add("hidden")
-		};
-		switchScene('user-display');
-	} else if (last_cmd == "get_support_code" && "user" in incoming) {
-        document.getElementById("mc-support").innerHTML = "";
-        document.getElementById("mc-support").innerText = 'Your support code is "' + `<span class="text-clickable" onclick="navigator.clipboard.writeText(${incoming.code});" title="Click to copy support code">${incoming.code}</span>` + '".\nDO NOT SHARE THIS TO ANYONE!';
-	} else if (last_cmd == "get_support_codeUser" && "user" in incoming) {
-        if (document.getElementById("mm-content-support").value == incoming["code"]) {
-            document.getElementById("mm-support-verify").innerText = incoming["user"] + "'s support code is valid!"
-            document.getElementById("mm-content-support").value = "";
-        } else {
-            document.getElementById("mm-support-verify").innerText = incoming["user"] + "'s support code is NOT valid."
-            document.getElementById("mm-content-support").value = "";
+        if ("error" in incoming) {
+            if (incoming.error) {
+                if (incoming.code == "banned") {
+                    displayError(`Account is banned until ${new Date(incoming.banned_until * 1000).toLocaleString()} for "${incoming.ban_reason}"`)
+                } else {
+                    displayError(`Error: ${incoming.code} (${incoming.form})`);
+                };
+            } else if (last_cmd == "login_token" || last_cmd == "login_pswd") {
+                if (scene == "register-login") {
+                    document.getElementById("register-login").classList.toggle("hidden");
+                } else if (scene == "loading") {
+                    document.getElementById("loading").classList.toggle("hidden");
+                };
+                scene = "main-scene";
+                if ([JSON.stringify([]), JSON.stringify(["POST"])].includes(JSON.stringify(incoming.user.permissions))) {
+                    document.getElementById("ms-button-mod").classList.add("hidden");
+                } else {
+                    document.getElementById("ms-button-mod").classList.remove("hidden");
+                };
+                document.getElementById("main-scene").classList.toggle("hidden");
+                document.getElementById("ms-name").innerText = `@${username}`
+                last_cmd = "get_inbox"
+                ws.send(JSON.stringify({command: "get_inbox"}))
+            };
+        };
+        if ("token" in incoming && incoming.listener == "RegisterLoginPswdListener") {
+            localStorage.setItem("username", username);
+            localStorage.setItem("token", incoming.token);
+            if (last_cmd == "register") {
+                window.location.reload();
+            };
+            logged_in = true;
+        } else if (last_cmd == "gen_invite" && "invite_code" in incoming) {
+            document.getElementById("mm-invite-code").innerText = `Your invite code is "${incoming.invite_code}". Use it on any SoktDeer client to sign up!\n\nAll available codes: ${incoming.invite_codes}`
+        } else if (last_cmd == "get_inbox" && "inbox" in incoming) {
+            document.getElementById("mi-posts").innerHTML = ""
+            for (const i in incoming.inbox) {
+                loadPost(incoming.inbox[i], true, true);
+            };
+            if (localStorage.getItem("last_inbox_id") != incoming.inbox[0].id) {
+                document.getElementById("ms-button-inbox").innerText = "Inbox*";
+                localStorage.setItem("last_inbox_id", incoming.inbox[0].id)
+            } else {
+                document.getElementById("ms-button-inbox").innerText = "Inbox";
+            };
+        } else if (last_cmd == "get_user" && "user" in incoming) {
+            let bio;
+            if (incoming.user.bio == "") {bio = "[tell this person to create a bio unless this is their bio!]"} else {bio = incoming.user.profile.bio};
+            if (incoming.user.profile.banner) {document.getElementById("user-display").style.setProperty("backgroundImage", `url(${banner})`, "important")} else {document.getElementById("user-display").style.removeProperty("backgroundImage")};
+            document.getElementById("ud-avatar").src = incoming.user.avatar;
+            document.getElementById("ud-display-name").innerHTML = `<b>${incoming.user.display_name}</b>`;
+            document.getElementById("ud-username").innerText = "@" + incoming.user.username;
+            document.getElementById("ud-created").innerText = `Created on ${new Date(incoming.user.created * 1000)}`;
+            let level = 0;
+            const permissions = ["POST", "INVITE", "INBOX", "CLEAR_HOME", "KICK", "BAN", "PROTECTED"];
+            let idx = 0;
+            for (let permission of permissions) {
+                if (incoming.user.permissions.includes(permission)) {
+                    level += 2 ** idx;
+                };
+                idx += 1;
+            };
+            document.getElementById("ud-level").innerText = `Level ${level}`;
+            document.getElementById("ud-permissions2").textContent = `${incoming.user.permissions.toString().toLowerCase().replaceAll(" ", "\n").replaceAll(",", "\n")}`;
+            document.getElementById("ud-special").innerHTML = "";
+            if (incoming.user.verified) {
+                document.getElementById("ud-special").innerHTML += "<br>Verified user";
+            };
+            if (incoming.user.bot) {
+                document.getElementById("ud-special").innerHTML += "<br>Bot user";
+            };
+            if (["sb4bot"].includes(incoming.user.username)) { // the reason this is a list is to allow for more bots
+                document.getElementById("ud-special").innerHTML += "<br>Supports BetterDeer command picker";
+            };
+            if (incoming.user.username == "speedbee411") {
+                document.getElementById("ud-special").innerHTML += "<br>Creator of BetterDeer";
+            }
+            if (incoming.user.banned_until > new Date().getTime() / 1000) {
+                document.getElementById("ud-banned-span").innerText = `Banned until ${new Date(incoming.user.banned_until * 1000).toLocaleString()}`;
+                document.getElementById("ud-banned").classList.remove("hidden");
+            } else {
+                document.getElementById("ud-banned").classList.add("hidden");
+            };
+            document.getElementById("ud-bio").innerText = bio;
+            if (incoming.user.profile.lastfm) {
+                document.getElementById("ud-lastfm-container").classList.add("hidden");
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var lfm = JSON.parse(xhttp.responseText);
+                        if (!"track" in lfm) {
+                            document.getElementById("ud-lastfm-container").classList.add("hidden");
+                        } else if (lfm.track["@attr"] && lfm.track["@attr"].nowplaying) {
+                            document.getElementById("ud-lastfm-container").classList.remove("hidden")
+                            document.getElementById("ud-lastfm-cover").src = lfm.track.image[lfm.track.image.length - 1]["#text"];
+                            document.getElementById("ud-lastfm-name").innerHTML = `<b>${DOMPurify.sanitize(lfm.track.name)}</b>`;
+                            document.getElementById("ud-lastfm-album").innerHTML = `on <b>${DOMPurify.sanitize(lfm.track.album["#text"])}</b>`;
+                            document.getElementById("ud-lastfm-artist").innerHTML = `by <b>${DOMPurify.sanitize(lfm.track.artist["#text"])}</b>`;
+                        } else {
+                            document.getElementById("ud-lastfm-container").classList.add("hidden");
+                        };
+                    }
+                };
+                xhttp.open("GET", `https://lastfm-last-played.biancarosa.com.br/${incoming.user.profile.lastfm}/latest-song`, true);
+                xhttp.send();
+            } else {
+                document.getElementById("ud-lastfm-container").classList.add("hidden")
+            };
+            switchScene('user-display');
+        } else if (last_cmd == "get_support_code" && "user" in incoming) {
+            document.getElementById("mc-support").innerHTML = "";
+            document.getElementById("mc-support").innerText = 'Your support code is "' + `<span class="text-clickable" onclick="navigator.clipboard.writeText(${incoming.code});" title="Click to copy support code">${incoming.code}</span>` + '".\nDO NOT SHARE THIS TO ANYONE!';
+        } else if (last_cmd == "get_support_codeUser" && "user" in incoming) {
+            if (document.getElementById("mm-content-support").value == incoming["code"]) {
+                document.getElementById("mm-support-verify").innerText = incoming["user"] + "'s support code is valid!"
+                document.getElementById("mm-content-support").value = "";
+            } else {
+                document.getElementById("mm-support-verify").innerText = incoming["user"] + "'s support code is NOT valid."
+                document.getElementById("mm-content-support").value = "";
+            }
         }
-    }
-};
+    };
+}
 
 ws.onclose = (event) => {
 	closeErrors();
@@ -1023,9 +1024,9 @@ function loadPost(resf, isFetch, isInbox) {
 	postEdit.type = "text";
 	post.appendChild(postEdit);
 	var editSend = document.createElement("button");
-	button.innerHTML = "Confirm";
-	button.id = "ms-edit-confirm";
-	button.onclick = () => {document.querySelector("#ms-post-edit").style.display = "none"; this.style.display = "none"; editPost(resf._id, document.querySelector("#ms-post-edit").value)};
+	editSend.innerHTML = "Confirm";
+	editSend.id = "ms-edit-confirm";
+	editSend.onclick = () => {document.querySelector("#ms-post-edit").style.display = "none"; this.style.display = "none"; editPost(resf._id, document.querySelector("#ms-post-edit").value)};
 	post.appendChild(editSend);
 	if ((resf.attachments.length != 0) && (!settings.blocked.includes(resf.author.username))) {
 		var horline = document.createElement("hr");
