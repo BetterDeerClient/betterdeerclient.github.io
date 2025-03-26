@@ -878,6 +878,7 @@ var count = 0;
 function loadPost(resf, isFetch, isInbox) {
 	console.log("Loading post " + resf._id)
 	var id = resf._id;
+	let backgroundColor = settings.post_color;
 	count += 1;
 	var tsr = resf.created;
 	var tsra = tsr * 1000;
@@ -886,7 +887,7 @@ function loadPost(resf, isFetch, isInbox) {
 	ts.setTime(tsrb);
 	var sts = ts.toLocaleString();
 	if (!(isFetch || (resf.author.username == localStorage.getItem("username").toLowerCase()) || resf.content.includes("@" + localStorage.getItem("username").toLowerCase()) || isInbox)) {
-		document.getElementById(id).style.backgroundColor = "#161600";
+		backgroundColor = "#161600";
 		if (document.visibilityState == "hidden") {
 			document.title = "(!) BetterDeer v2";
 		};
@@ -909,7 +910,7 @@ function loadPost(resf, isFetch, isInbox) {
 			replies_loaded += " || ";
 		};
 		if ((!isFetch) && (resf.replies[i].author.username == localStorage.getItem("username").toLowerCase()) && (resf.author.username != localStorage.getItem("username").toLowerCase())) {
-			document.getElementById(id).style.backgroundColor = "#323200";
+			backgroundColor = "#323200";
 			if (document.visibilityState == "hidden") {
 				document.title = "(!!) BetterDeer v2";
 			};
@@ -927,7 +928,7 @@ function loadPost(resf, isFetch, isInbox) {
 		};
 	};
 	if ((!isFetch) && (resf.content.includes("@" + localStorage.getItem("username").toLowerCase()))) {
-		document.getElementById(id).style.backgroundColor = "#646400";
+		backgroundColor = "#646400";
 		if (document.visibilityState == "hidden") {
 			document.title = "(!!!) BetterDeer v2";
 		};
@@ -1058,6 +1059,7 @@ function loadPost(resf, isFetch, isInbox) {
 	var postboxid;
 	if (isInbox) {postboxid = "mi-posts"} else {postboxid = "ms-posts"};
 	post.id = id;
+	post.style.backgroundColor = backgroundColor;
 	if (isFetch) {
 		document.getElementById(postboxid).appendChild(post);
 	} else {
