@@ -1021,7 +1021,7 @@ function loadPost(resf, isFetch, isInbox) {
 	postEdit.maxlength = "2500";
 	postEdit.oninput = textinput();
 	postEdit.autocomplete = "off";
-	postEdit.onkeydown = () => {if (event.keyCode == 13) {if (event.shiftKey) {document.getElementById(`ms-post-edit${count}`).value += '\\n'} else if (document.getElementById(`ms-post-edit${count}`).value.length > 0) {document.querySelector(`#ms-post-edit${count}`).style.display = "none"; document.querySelector(`#ms-edit-send${count}`).style.display = "none"; editPost(resf._id, document.querySelector(`#ms-post-edit${count}`).value)}}};
+	postEdit.onkeydown = () => {if (event.keyCode == 13) {if (event.shiftKey) {document.getElementById(`ms-post-edit${count}`).value += '\\n'} else if (document.getElementById(`ms-post-edit${count}`).value.length > 0) {document.querySelector(`#ms-post-edit${count}`).style.display = "none"; document.querySelector(`#ms-edit-confirm${count}`).style.display = "none"; editPost(resf._id, document.querySelector(`#ms-post-edit${count}`).value)}}};
 	postEdit.placeholder = "Enter new post contents here...";
 	postEdit.type = "text";
 	post.appendChild(postEdit);
@@ -1029,7 +1029,7 @@ function loadPost(resf, isFetch, isInbox) {
 	editSend.innerHTML = "Confirm";
 	editSend.style.display = "none";
 	editSend.id = `ms-edit-confirm${count}`;
-	editSend.onclick = () => {document.querySelector(`#ms-post-edit${count}`).style.display = "none"; document.querySelector(`#ms-edit-send${count}`).style.display = "none"; editPost(resf._id, document.querySelector(`#ms-post-edit${count}`).value)};
+	editSend.onclick = () => {document.querySelector(`#ms-post-edit${count}`).style.display = "none"; document.querySelector(`#ms-edit-confirm${count}`).style.display = "none"; editPost(resf._id, document.querySelector(`#ms-post-edit${count}`).value)};
 	post.appendChild(editSend);
 	if ((resf.attachments.length != 0) && (!settings.blocked.includes(resf.author.username))) {
 		var horline = document.createElement("hr");
