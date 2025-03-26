@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US">
 	<head>
-		<title>BetterDeer v2</title>
+		<title>BetterDeer v3</title>
 		<meta name="mobile-web-app-capable" content="yes">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 		<meta charset="UTF-8">
@@ -365,6 +365,7 @@
 		</div>
 		</div>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.0/purify.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha512/0.8.0/sha512.min.js"></script>
 	<script>
 // hello guys gals and gays!
 // keep in mind that like rome, this was infact not built in a day*
@@ -629,8 +630,8 @@ ws.onmessage = (event) => {
 	switch (incoming.command) {
 		case "greet":
 			closeErrors();
-			document.getElementById("rl-version").innerText = `${version} - ${incoming.version} | BETTERDEER v2`;
-			document.getElementById("mc-version").innerText = `${version} - ${incoming.version} | BETTERDEER v2`;
+			document.getElementById("rl-version").innerText = `${version} - ${incoming.version} | BETTERDEER V3`;
+			document.getElementById("mc-version").innerText = `${version} - ${incoming.version} | BETTERDEER V3`;
 			if (incoming.version != serverVersion) {
 				displayError(`The server is on a different version than the client. Be wary of issues while using the client. (Expected "${incoming.version}", got "${serverVersion}")`);
 			};
@@ -656,7 +657,7 @@ ws.onmessage = (event) => {
 			} else {
 				username = localStorage.getItem("username").toLowerCase();
 				last_cmd = "login_token";
-				ws.send(JSON.stringify({command: "login_token", username: username, token: localStorage.getItem("token"), client: "BetterDeer v2"}))
+				ws.send(JSON.stringify({command: "login_token", username: username, token: localStorage.getItem("token"), client: "BetterDeer v3"}))
 			};
 			stgsTriggers();
 			break;
@@ -801,14 +802,14 @@ ws.onmessage = (event) => {
 ws.onclose = (event) => {
 	closeErrors();
 	console.log(`ws connection closed\nevent: ${event}`);
-	document.title = "(?) BetterDeer v2";
+	document.title = "(?) BetterDeer v3";
 	switchScene("connection-lost");
 };
 
 ws.onerror = (event) => {
 	closeErrors();
 	console.log(`ws error\nevent: ${event}`);
-	document.title = "(??) BetterDeer v2";
+	document.title = "(??) BetterDeer v3";
 	switchScene("connection-lost");
 };
 
@@ -857,7 +858,7 @@ function register() {
 function logIn() {
 	last_cmd = "login_pswd";
 	username = document.getElementById("rl-username").value.toLowerCase();
-	ws.send(JSON.stringify({command: "login_pswd", username: username, password: document.getElementById("rl-password").value, client: "BetterDeer v2", listener: "RegisterLoginPswdListener"}))
+	ws.send(JSON.stringify({command: "login_pswd", username: username, password: document.getElementById("rl-password").value, client: "BetterDeer v3", listener: "RegisterLoginPswdListener"}))
 };
 
 function logOut() {
@@ -876,6 +877,7 @@ function notify(msg, title) {
 }
 var count = 0;	
 function loadPost(resf, isFetch, isInbox) {
+	if (!localStorage.getItem("username")) {return};
 	console.log("Loading post " + resf._id)
 	var id = resf._id;
 	let backgroundColor = settings.post_color;
@@ -888,7 +890,7 @@ function loadPost(resf, isFetch, isInbox) {
 	var sts = ts.toLocaleString();
 	if (!(isFetch || (resf.author.username == localStorage.getItem("username").toLowerCase()) || resf.content.includes("@" + localStorage.getItem("username").toLowerCase()) || isInbox)) {
 		if (document.visibilityState == "hidden") {
-			document.title = "(!) BetterDeer v2";
+			document.title = "(!) BetterDeer v3";
 		};
 		if (settings.msg_notif) {
 			if (Notification.permission === "granted") {
@@ -912,7 +914,7 @@ function loadPost(resf, isFetch, isInbox) {
 		if ((!isFetch) && (resf.replies[i].author.username == localStorage.getItem("username").toLowerCase()) && (resf.author.username != localStorage.getItem("username").toLowerCase())) {
 			console.log(backgroundColor);
 			if (document.visibilityState == "hidden") {
-				document.title = "(!!) BetterDeer v2";
+				document.title = "(!!) BetterDeer v3";
 			};
 			if (settings.reply_notif) {
 				if (Notification.permission === "granted") {
@@ -930,7 +932,7 @@ function loadPost(resf, isFetch, isInbox) {
 	if (resf.content.includes("@" + localStorage.getItem("username").toLowerCase())) {backgroundColor = "#646400"};
 	if ((!isFetch) && (resf.content.includes("@" + localStorage.getItem("username").toLowerCase()))) {
 		if (document.visibilityState == "hidden") {
-			document.title = "(!!!) BetterDeer v2";
+			document.title = "(!!!) BetterDeer v3";
 		};
 		if (settings.mention_notif) {
 			if (Notification.permission === "granted") {
@@ -1012,11 +1014,11 @@ function loadPost(resf, isFetch, isInbox) {
 	};
 
 	var postContent = document.createElement("span");
-	postContent.id = "ms-post-content";
+	postContent.id = `ms-post-content`;
 	if (!settings.blocked.includes(resf.author.username)) {
 		postContent.innerText = resf.content;
 	} else {
-		postContent.innerText = "https://youtu.be/N8oelDd5jy0";
+		postContent.innerText = "https://youtu.be/jev4j-msjuA";
 	};
 	post.appendChild(postContent);
 	var postEdit = document.createElement("input");
@@ -1298,11 +1300,11 @@ function removepost(id, dba) {
     try {
         document.getElementById(id).style.backgroundColor = "#320000";
         if (dba) {
-            document.getElementById(id).innerHTML += "<br><small class='reply' style='vertical-align:top;'><i>post deleted by author</i></small>";
+            document.getElementById(id).innerHTML = sha512(document.getElementById(id).innerHTML) + "<br><small class='reply' style='vertical-align:top;'>post deleted by author</small>";
         } else {
-            document.getElementById(id).innerHTML += "<Br><small class='reply' style='vertical-align:top;'><i>post deleted by moderator</i></small>";
+            document.getElementById(id).innerHTML = sha512(document.getElementById(id).innerHTML) + "<br><small class='reply' style='vertical-align:top;'>post deleted by moderator</small>";
         }
-    } catch {console.log("failed to reveal deletion")};
+    } catch {console.log("failed to delete")};
 };
 		
 function editedpost(id, content) {
@@ -1311,7 +1313,7 @@ function editedpost(id, content) {
 		document.getElementById(id).innerHTML = "<del>" + document.getElementById(id).innerHTML + "</del><br>" + content;
 		document.getElementById(id).style.setProperty("background-color", "#323232", "important");
 		parseAllMarkdown();
-	} catch {console.log("failed to reveal edit")};
+	} catch {console.log("failed to edit")};
 };
 		
 function clearReplies() {
@@ -1371,7 +1373,7 @@ function ping() {
 };
 
 function resetTitle() {
-	document.title = "BetterDeer v2"
+	document.title = "BetterDeer v3"
 };
 
 document.addEventListener("focus", resetTitle);
