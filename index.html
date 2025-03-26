@@ -886,6 +886,7 @@ function loadPost(resf, isFetch, isInbox) {
 	ts.setTime(tsrb);
 	var sts = ts.toLocaleString();
 	if (!(isFetch || (resf.author.username == localStorage.getItem("username").toLowerCase()) || resf.content.includes("@" + localStorage.getItem("username").toLowerCase()) || isInbox)) {
+		document.getElementById(id).style.backgroundColor = "#161600";
 		if (document.visibilityState == "hidden") {
 			document.title = "(!) BetterDeer v2";
 		};
@@ -908,6 +909,7 @@ function loadPost(resf, isFetch, isInbox) {
 			replies_loaded += " || ";
 		};
 		if ((!isFetch) && (resf.replies[i].author.username == localStorage.getItem("username").toLowerCase()) && (resf.author.username != localStorage.getItem("username").toLowerCase())) {
+			document.getElementById(id).style.backgroundColor = "#323200";
 			if (document.visibilityState == "hidden") {
 				document.title = "(!!) BetterDeer v2";
 			};
@@ -925,6 +927,7 @@ function loadPost(resf, isFetch, isInbox) {
 		};
 	};
 	if ((!isFetch) && (resf.content.includes("@" + localStorage.getItem("username").toLowerCase()))) {
+		document.getElementById(id).style.backgroundColor = "#646400";
 		if (document.visibilityState == "hidden") {
 			document.title = "(!!!) BetterDeer v2";
 		};
@@ -1304,6 +1307,7 @@ function editedpost(id, content) {
 	try {
 		document.getElementById(id).classList.remove("mewhenthemarkdownisparsed");
 		document.getElementById(id).innerHTML = "<ins>" + document.getElementById(id).innerHTML + "</ins><br>" + content;
+		document.getElementById(id).style.backgroundColor = "#323232";
 		parseAllMarkdown();
 	} catch {console.log("failed to reveal edit")};
 };
