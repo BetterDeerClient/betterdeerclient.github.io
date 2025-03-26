@@ -908,7 +908,7 @@ function loadPost(resf, isFetch, isInbox) {
 		if (i != resf.replies.length - 1) {
 			replies_loaded += " || ";
 		};
-		if (resf.replies[i].author.username == localStorage.getItem("username").toLowerCase()) {backgroundColor = "#323200"};
+		if (resf.replies[i].author.username == localStorage.getItem("username").toLowerCase()) {backgroundColor = "#323200 !important"};
 		if ((!isFetch) && (resf.replies[i].author.username == localStorage.getItem("username").toLowerCase()) && (resf.author.username != localStorage.getItem("username").toLowerCase())) {
 			console.log(backgroundColor);
 			if (document.visibilityState == "hidden") {
@@ -1059,8 +1059,7 @@ function loadPost(resf, isFetch, isInbox) {
 	var postboxid;
 	if (isInbox) {postboxid = "mi-posts"} else {postboxid = "ms-posts"};
 	post.id = id;
-	console.log(backgroundColor);
-	post.style.backgroundColor = backgroundColor;
+	post.style.setProperty('background-color', backgroundColor, 'important');
 	if (isFetch) {
 		document.getElementById(postboxid).appendChild(post);
 	} else {
@@ -1309,8 +1308,8 @@ function removepost(id, dba) {
 function editedpost(id, content) {
 	try {
 		document.getElementById(id).classList.remove("mewhenthemarkdownisparsed");
-		document.getElementById(id).innerHTML = "<ins>" + document.getElementById(id).innerHTML + "</ins><br>" + content;
-		document.getElementById(id).style.backgroundColor = "#323232";
+		document.getElementById(id).innerHTML = "<del>" + document.getElementById(id).innerHTML + "</del><br>" + content;
+		document.getElementById(id).style.setProperty("background-color", "#323232", "important");
 		parseAllMarkdown();
 	} catch {console.log("failed to reveal edit")};
 };
