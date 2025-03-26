@@ -659,11 +659,21 @@ ws.onmessage = (event) => {
 				ws.send(JSON.stringify({command: "login_token", username: username, token: localStorage.getItem("token"), client: "BetterDeer v2"}))
 			};
 			stgsTriggers();
+			break;
 		case "ulist":
 			ulist2 = incoming.ulist;
 			ulist = Object.keys(ulist2);
-        	updateUlist();
-		};
+			updateUlist();
+			break;
+		case "new_post":
+			loadPost(incoming.data, false, false);
+			break;
+		case "deleted_post":
+			removepost(incoming._id, incoming.deleted_by_author)
+			break;
+		case "edited_post":
+			editedpost(incoming._id, incoming.content)
+			break;
 	if ("error" in incoming) {
 		if (incoming.error) {
 			if (incoming.code == "banned") {
@@ -696,8 +706,6 @@ ws.onmessage = (event) => {
 			window.location.reload();
 		};
 		logged_in = true;
-	} else if (incoming.command == "new_post") {
-		loadPost(incoming.data, false, false);
 	} else if (last_cmd == "gen_invite" && "invite_code" in incoming) {
 		document.getElementById("mm-invite-code").innerText = `Your invite code is "${incoming.invite_code}". Use it on any SoktDeer client to sign up!\n\nAll available codes: ${incoming.invite_codes}`
 	} else if (last_cmd == "get_inbox" && "inbox" in incoming) {
@@ -868,6 +876,7 @@ function notify(msg, title) {
 		
 function loadPost(resf, isFetch, isInbox) {
 	console.log("Loading post " + resf._id)
+	var id = resf._id;
 	var tsr = resf.created;
 	var tsra = tsr * 1000;
 	var tsrb = Math.trunc(tsra);
@@ -938,9 +947,7 @@ function loadPost(resf, isFetch, isInbox) {
 	} else {
 		avatar.src = "https://deer.fraudulent.loan/assets/default.png";
 	};
-	if (glow) {
-		avatar.style.boxShadow = "0 0 10px 5px rgba(255, 255, 255, 0.75)";
-	}
+	if (glow) {avatar.style.boxShadow = "0 0 10px 5px rgba(255, 255, 255, 0.75)"};
 	avatar.setAttribute("onerror", "this.src = 'https://deer.fraudulent.loan/assets/default.png';")
 	avatar.setAttribute("onclick", `showUser("${resf.author.username}");`);
 	avatar.classList.add("clickable");
@@ -961,7 +968,7 @@ function loadPost(resf, isFetch, isInbox) {
 	try {
 		postUsername.innerHTML += `<span class="mono">, ${ulist2[resf.author.username].client}</span>`;
 	} catch (e) {
-		postUsername.innerHTML += `<span class="mono">, the deep dark from minecraft}</span>`;
+		postUsername.innerHTML += `<span class="mono">, the deep dark from minecraft</span>`;
 	}
 	postUsername.setAttribute("onclick", `showUser("${resf.author.username}");`);
 	postUsername.classList.add("clickable");
@@ -974,9 +981,13 @@ function loadPost(resf, isFetch, isInbox) {
 	if (isInbox) {
 		postDetails.innerHTML = `${DOMPurify.sanitize(sts)}`;
 	} else {
-		postDetails.innerHTML = `${DOMPurify.sanitize(sts)} | <span class="text-clickable" onclick="reply('${resf._id}', '${resf.content.replaceAll("\n", "\\n").replaceAll("<br>", "\\n").replaceAll("'", "\\'").replaceAll('"', '')}');">Reply</span>`;
+		if (resf.author.username == localStorage.getItem("username")) {
+			postDetails.innerHTML = `${DOMPurify.sanitize(sts)} | <span class="text-clickable" onclick="reply('${resf._id}', '${resf.content.replaceAll("\n", "\\n").replaceAll("<br>", "\\n").replaceAll("'", "\\'").replaceAll('"', '')}');">Reply</span> | <span class="text-clickable" onclick="deletePost(${resf._id});">Delete</span> | <span class="text-clickable" onclick="document.querySelector('#ms-post-edit').style.display = 'block'; document.querySelector('#ms-edit-confirm').style.display = 'block';">Edit</span>`;
+		} else {
+			postDetails.innerHTML = `${DOMPurify.sanitize(sts)} | <span class="text-clickable" onclick="reply('${resf._id}', '${resf.content.replaceAll("\n", "\\n").replaceAll("<br>", "\\n").replaceAll("'", "\\'").replaceAll('"', '')}');">Reply</span>`;
+		}
 	};
-	if (settings.blocked.includes(resf.username)) {
+	if (settings.blocked.includes(resf.author.username)) {
 		replies_loaded = "BLOCKED";
 	};
 	post.appendChild(postDetails);
@@ -996,14 +1007,27 @@ function loadPost(resf, isFetch, isInbox) {
 
 	var postContent = document.createElement("span");
 	postContent.id = "ms-post-content";
-	if (!settings.blocked.includes(resf.username)) {
+	if (!settings.blocked.includes(resf.author.username)) {
 		postContent.innerText = resf.content;
 	} else {
 		postContent.innerText = "https://youtu.be/N8oelDd5jy0";
 	};
 	post.appendChild(postContent);
-
-	if ((resf.attachments.length != 0) && (!settings.blocked.includes(resf.username))) {
+	var postEdit = document.createElement("input");
+	postEdit.id = "ms-post-edit";
+	postEdit.maxlength = "2500";
+	postEdit.oninput = textinput();
+	postEdit.autocomplete = "off";
+	postEdit.onkeydown = () => {if (event.keyCode == 13) {if (event.shiftKey) {document.getElementById('ms-post-edit').value += '\\n'} else if (document.getElementById('ms-post-edit').value.length > 0) {editPost(resf._id, document.querySelector("#ms-post-edit").value)}}};
+	postEdit.placeholder = "Enter new post contents here...";
+	postEdit.type = "text";
+	post.appendChild(postEdit);
+	var editSend = document.createElement("button");
+	button.innerHTML = "Confirm";
+	button.id = "ms-edit-confirm";
+	button.onclick = () => {document.querySelector("#ms-post-edit").style.display = "none"; this.style.display = "none"; editPost(resf._id, document.querySelector("#ms-post-edit").value)};
+	post.appendChild(editSend);
+	if ((resf.attachments.length != 0) && (!settings.blocked.includes(resf.author.username))) {
 		var horline = document.createElement("hr");
 		post.appendChild(horline);
 		
@@ -1013,17 +1037,18 @@ function loadPost(resf, isFetch, isInbox) {
 		}
 		post.appendChild(attachmentDetails)
 
-		// maybe this is efficient code? how the fuck did you not think of this?
+		// this is efficient code, how the fuck did you not think of this?
 		for (let i = 0; i < resf.attachments.length; i++) {
 			let attachment = document.createElement("img");
-			attachment.src = resf.attachments[i]
-			attachment.classList.add("attachment")
-			attachment.setAttribute("onerror", "this.remove();")
+			attachment.src = resf.attachments[i];
+			attachment.classList.add("attachment");
+			attachment.setAttribute("onerror", "let attachment = document.createElement('video'); attachment.src = resf.attachments[i]; attachment.classList.add('attachment'); attachment.setAttribute('onerror', 'this.remove()'); this.remove();")
 			post.appendChild(attachment);
-		}
+		};
 	};
 	var postboxid;
 	if (isInbox) {postboxid = "mi-posts"} else {postboxid = "ms-posts"};
+	post.id = id;
 	if (isFetch) {
 		document.getElementById(postboxid).appendChild(post);
 	} else {
@@ -1232,9 +1257,49 @@ function reply(id, msg) {
 	updateDetailsMsg();
 };
 
+function deletePost(id) {
+	var wdp = confirm("Are you sure you want to delete this post?");
+	if (wdp) { 
+		last_cmd = "delete_post";
+		ws.send(JSON.stringify({command: "delete_post", id: id}));
+	};
+};
+
+function editPost(id, msg) {
+	last_cmd = "edit_post";
+	if (replace_text) {
+		for (const i in text_replacements) {
+			content = msg.replaceAll(i, text_replacements[i]);
+		};
+	};
+	ws.send(JSON.stringify({command: "edit_post", id: id, content: content}));
+	attachments = [];
+	replies = [];
+	updateDetailsMsg();
+};
+	
 function showReplies() {
 	document.getElementById("rd-display").innerHTML = DOMPurify.sanitize(replies2.join("<br>"));
 	switchScene('reply-display');
+};
+
+function removepost(id, dba) {
+    try {
+        document.getElementById(id).style.backgroundColor = "#320000";
+        if (dba) {
+            document.getElementById(id).innerHTML += "<br><small class='reply' style='vertical-align:top;'><i>post deleted by author</i></small>";
+        } else {
+            document.getElementById(id).innerHTML += "<Br><small class='reply' style='vertical-align:top;'><i>post deleted by moderator</i></small>";
+        }
+    } catch {};
+};
+		
+function editedpost(id, content) {
+	try {
+		document.getElementById(id).classList.remove("mewhenthemarkdownisparsed");
+		document.getElementById(id).innerHTML += '\n' + content;
+		parseAllMarkdown()
+	} catch {};
 };
 		
 function clearReplies() {
