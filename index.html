@@ -353,16 +353,18 @@
 		<div id="command-picker" class="hidden">
 			<button style="float: right; padding: 10px; border-radius: 4px;" onclick="switchScene('main-scene')">✖</button>
 			<h1>Command Picker</h1>
-			<span>Commands from bots that use deerbot.py are listed here.<br>You can request your bot to be added here.</span><hr>
+			<span>Commands from bots that use deerbot.py are listed here.<br>You can request your bot to be added here, even if it doesn't use deerbot.py.</span><hr>
 			<h2>Sb4bot</h2>
 			<button onclick="document.getElementById('ms-msg').value = '@Sb4bot help'; switchScene('main-scene')">Detailed command info</button>
 			<button onclick="document.getElementById('ms-msg').value = '@Sb4bot rps <choice: rock|paper|scissors>'; switchScene('main-scene')">Rock paper scissors</button>
-			<button onclick="document.getElementById('ms-msg').value = '@Sb4bot rng [optional seed message]'; switchScene('main-scene')">RNG</button>
+			<button onclick="document.getElementById('ms-msg').value = '@Sb4bot rng [optional seed message]'; switchScene('main-scene')">RNG (25 second cooldown)</button>
 			<button onclick="document.getElementById('ms-msg').value = '@Sb4bot wawameter <showlb: yes|no> [member: (username)]'; switchScene('main-scene')">Wawameter</button>
+			<button onclick="document.getElementById('ms-msg').value = '@Sb4bot work'; switchScene('main-scene')">Pseudowork (90 second cooldown)</button>
+			<button onclick="document.getElementById('ms-msg').value = '@Sb4bot reversework'; switchScene('main-scene')">Pseudoreversework (90 second cooldown)</button>
+			<button onclick="document.getElementById('ms-msg').value = '@Sb4bot balance'; switchScene('main-scene')">Check your balance</button>
 		</div>
 		</div>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.0/purify.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha512/0.8.0/sha512.min.js"></script>
 	<script>
 // hello guys gals and gays!
 // keep in mind that like rome, this was infact not built in a day*
