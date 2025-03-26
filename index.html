@@ -1021,16 +1021,18 @@ function loadPost(resf, isFetch, isInbox) {
 	postEdit.maxlength = "2500";
 	postEdit.oninput = textinput();
 	postEdit.autocomplete = "off";
-	postEdit.onkeydown = () => {if (event.keyCode == 13) {if (event.shiftKey) {document.getElementById(`ms-post-edit${count}`).value += '\\n'} else if (document.getElementById(`ms-post-edit${count}`).value.length > 0) {document.querySelector(`#ms-post-edit${count}`).style.display = "none"; document.querySelector(`#ms-edit-confirm${count}`).style.display = "none"; editPost(resf._id, document.querySelector(`#ms-post-edit${count}`).value)}}};
 	postEdit.placeholder = "Enter new post contents here...";
 	postEdit.type = "text";
-	post.appendChild(postEdit);
 	var editSend = document.createElement("button");
 	editSend.innerHTML = "Confirm";
 	editSend.style.display = "none";
 	editSend.id = `ms-edit-confirm${count}`;
-	editSend.onclick = () => {console.log(`#ms-post-edit${count}`); document.querySelector(`#ms-post-edit${count}`).style.display = "none"; document.querySelector(`#ms-edit-confirm${count}`).style.display = "none"; editPost(resf._id, document.querySelector(`#ms-post-edit${count}`).value)};
+	const current = postEdit.id;
+	const current2 = editSend.id;
+	editSend.onclick = () => {console.log(current); document.querySelector(current).style.display = "none"; document.querySelector(current2).style.display = "none"; editPost(resf._id, document.querySelector(current).value)};
+	postEdit.onkeydown = () => {if (event.keyCode == 13) {if (event.shiftKey) {document.getElementById(current).value += '\\n'} else if (document.getElementById(current).value.length > 0) {document.querySelector(current).style.display = "none"; document.querySelector(current2).style.display = "none"; editPost(resf._id, document.querySelector(current).value)}}};
 	post.appendChild(editSend);
+	post.appendChild(postEdit);
 	if ((resf.attachments.length != 0) && (!settings.blocked.includes(resf.author.username))) {
 		var horline = document.createElement("hr");
 		post.appendChild(horline);
