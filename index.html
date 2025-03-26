@@ -887,7 +887,6 @@ function loadPost(resf, isFetch, isInbox) {
 	ts.setTime(tsrb);
 	var sts = ts.toLocaleString();
 	if (!(isFetch || (resf.author.username == localStorage.getItem("username").toLowerCase()) || resf.content.includes("@" + localStorage.getItem("username").toLowerCase()) || isInbox)) {
-		backgroundColor = "#161600";
 		if (document.visibilityState == "hidden") {
 			document.title = "(!) BetterDeer v2";
 		};
@@ -909,9 +908,8 @@ function loadPost(resf, isFetch, isInbox) {
 		if (i != resf.replies.length - 1) {
 			replies_loaded += " || ";
 		};
+		if (resf.replies[i].author.username == localStorage.getItem("username").toLowerCase()) {backgroundColor = "#323200"};
 		if ((!isFetch) && (resf.replies[i].author.username == localStorage.getItem("username").toLowerCase()) && (resf.author.username != localStorage.getItem("username").toLowerCase())) {
-			console.log(backgroundColor);
-			backgroundColor = "#323200";
 			console.log(backgroundColor);
 			if (document.visibilityState == "hidden") {
 				document.title = "(!!) BetterDeer v2";
@@ -929,8 +927,8 @@ function loadPost(resf, isFetch, isInbox) {
 			};
 		};
 	};
+	if (resf.content.includes("@" + localStorage.getItem("username").toLowerCase()))) {backgroundColor = "#646400"};
 	if ((!isFetch) && (resf.content.includes("@" + localStorage.getItem("username").toLowerCase()))) {
-		backgroundColor = "#646400";
 		if (document.visibilityState == "hidden") {
 			document.title = "(!!!) BetterDeer v2";
 		};
