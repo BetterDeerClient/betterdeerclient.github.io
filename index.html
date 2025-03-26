@@ -910,7 +910,9 @@ function loadPost(resf, isFetch, isInbox) {
 			replies_loaded += " || ";
 		};
 		if ((!isFetch) && (resf.replies[i].author.username == localStorage.getItem("username").toLowerCase()) && (resf.author.username != localStorage.getItem("username").toLowerCase())) {
+			console.log(backgroundColor);
 			backgroundColor = "#323200";
+			console.log(backgroundColor);
 			if (document.visibilityState == "hidden") {
 				document.title = "(!!) BetterDeer v2";
 			};
@@ -1059,6 +1061,7 @@ function loadPost(resf, isFetch, isInbox) {
 	var postboxid;
 	if (isInbox) {postboxid = "mi-posts"} else {postboxid = "ms-posts"};
 	post.id = id;
+	console.log(backgroundColor);
 	post.style.backgroundColor = backgroundColor;
 	if (isFetch) {
 		document.getElementById(postboxid).appendChild(post);
