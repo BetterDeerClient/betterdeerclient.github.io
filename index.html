@@ -927,7 +927,7 @@ function loadPost(resf, isFetch, isInbox) {
 			};
 		};
 	};
-	if (resf.content.includes("@" + localStorage.getItem("username").toLowerCase()))) {backgroundColor = "#646400"};
+	if (resf.content.includes("@" + localStorage.getItem("username").toLowerCase())) {backgroundColor = "#646400"};
 	if ((!isFetch) && (resf.content.includes("@" + localStorage.getItem("username").toLowerCase()))) {
 		if (document.visibilityState == "hidden") {
 			document.title = "(!!!) BetterDeer v2";
