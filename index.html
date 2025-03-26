@@ -1027,12 +1027,12 @@ function loadPost(resf, isFetch, isInbox) {
 	editSend.innerHTML = "Confirm";
 	editSend.style.display = "none";
 	editSend.id = `ms-edit-confirm${count}`;
-	const current = postEdit.id;
-	const current2 = editSend.id;
+	const current = "#" + postEdit.id;
+	const current2 = "#" + editSend.id;
 	editSend.onclick = () => {console.log(current); document.querySelector(current).style.display = "none"; document.querySelector(current2).style.display = "none"; editPost(resf._id, document.querySelector(current).value)};
-	postEdit.onkeydown = () => {if (event.keyCode == 13) {if (event.shiftKey) {document.getElementById(current).value += '\\n'} else if (document.getElementById(current).value.length > 0) {document.querySelector(current).style.display = "none"; document.querySelector(current2).style.display = "none"; editPost(resf._id, document.querySelector(current).value)}}};
-	post.appendChild(editSend);
+	postEdit.onkeydown = () => {if (event.keyCode == 13) {if (event.shiftKey) {document.querySelector(current).value += '\\n'} else if (document.querySelector(current).value.length > 0) {document.querySelector(current).style.display = "none"; document.querySelector(current2).style.display = "none"; editPost(resf._id, document.querySelector(current).value)}}};
 	post.appendChild(postEdit);
+	post.appendChild(editSend);
 	if ((resf.attachments.length != 0) && (!settings.blocked.includes(resf.author.username))) {
 		var horline = document.createElement("hr");
 		post.appendChild(horline);
