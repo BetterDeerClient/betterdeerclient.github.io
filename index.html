@@ -984,7 +984,7 @@ function loadPost(resf, isFetch, isInbox) {
 		postDetails.innerHTML = `${DOMPurify.sanitize(sts)}`;
 	} else {
 		if (resf.author.username == localStorage.getItem("username")) {
-			postDetails.innerHTML = `${DOMPurify.sanitize(sts)} | <span class="text-clickable" onclick="reply('${resf._id}', '${resf.content.replaceAll("\n", "\\n").replaceAll("<br>", "\\n").replaceAll("'", "\\'").replaceAll('"', '')}');">Reply</span> | <span class="text-clickable" onclick="deletePost(${resf._id});">Delete</span> | <span class="text-clickable" onclick="document.querySelector('#ms-post-edit').style.display = 'block'; document.querySelector('#ms-edit-confirm').style.display = 'block';">Edit</span>`;
+			postDetails.innerHTML = `${DOMPurify.sanitize(sts)} | <span class="text-clickable" onclick="reply('${resf._id}', '${resf.content.replaceAll("\n", "\\n").replaceAll("<br>", "\\n").replaceAll("'", "\\'").replaceAll('"', '')}');">Reply</span> | <span class="text-clickable" onclick="deletePost(${resf._id});">Delete</span> | <span class="text-clickable" onclick="document.querySelector('#ms-post-edit${count}').style.display = 'block'; document.querySelector('#ms-edit-confirm${count}').style.display = 'block';">Edit</span>`;
 		} else {
 			postDetails.innerHTML = `${DOMPurify.sanitize(sts)} | <span class="text-clickable" onclick="reply('${resf._id}', '${resf.content.replaceAll("\n", "\\n").replaceAll("<br>", "\\n").replaceAll("'", "\\'").replaceAll('"', '')}');">Reply</span>`;
 		}
@@ -1295,15 +1295,15 @@ function removepost(id, dba) {
         } else {
             document.getElementById(id).innerHTML += "<Br><small class='reply' style='vertical-align:top;'><i>post deleted by moderator</i></small>";
         }
-    } catch {};
+    } catch {console.log("failed to reveal deletion")};
 };
 		
 function editedpost(id, content) {
 	try {
 		document.getElementById(id).classList.remove("mewhenthemarkdownisparsed");
 		document.getElementById(id).innerHTML += '\n' + content;
-		parseAllMarkdown()
-	} catch {};
+		parseAllMarkdown();
+	} catch {console.log("failed to reveal edit")};
 };
 		
 function clearReplies() {
