@@ -1054,7 +1054,7 @@ function loadPost(resf, isFetch, isInbox) {
 			let attachment = document.createElement("img");
 			attachment.src = resf.attachments[i];
 			attachment.classList.add("attachment");
-			attachment.setAttribute("onerror", `let attachment = document.createElement('video'); attachment.src = ${resf.attachments[i]}; attachment.classList.add('attachment'); attachment.setAttribute('onerror', 'attachment.setAttribute("onerror", "let attachment = document.createElement('audio'); attachment.src = ${resf.attachments[i]}; attachment.classList.add('attachment'); attachment.setAttribute('onerror', 'this.remove()'); this.remove();")'); this.remove();`)
+			attachment.setAttribute("onerror", `let attachment = document.createElement('video'); attachment.src = '${resf.attachments[i]}'; attachment.classList.add('attachment'); attachment.setAttribute('onerror', 'let attachment = document.createElement("audio"); attachment.src = "${resf.attachments[i]}"; attachment.classList.add("attachment"); attachment.setAttribute("onerror", "this.remove()"); this.remove();'); this.remove();`)
 			post.appendChild(attachment);
 		};
 	};
