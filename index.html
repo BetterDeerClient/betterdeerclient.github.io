@@ -1023,6 +1023,7 @@ function loadPost(resf, isFetch, isInbox) {
 	post.appendChild(postContent);
 	var postEdit = document.createElement("input");
 	postEdit.id = `ms-post-edit${count}`;
+	postEdit.style.width = "90%";
 	postEdit.style.display = "none";
 	postEdit.maxlength = "2500";
 	postEdit.oninput = textinput();
