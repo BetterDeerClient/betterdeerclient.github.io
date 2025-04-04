@@ -289,7 +289,7 @@
 			<h2><b>Misc</b></h2>
 			<button id="mc-button-markdown" onclick="updateStg('markdown')">Unable to get markdown setting</button><br>
 			<button id="mc-button-replace" onclick="updateStg('replace_text')">Unable to get text replacement setting</button><br><br>
-			<button onclick="for (const i in settings_template) {settings[i] = settings_template[i]}; localStorage.setItem('settings', JSON.stringify(settings)); stgsTriggers();">Revert to Default Settings</button><br><br>
+			<button onclick="for (const i in settings_template) {settings[i] = settings_template[i]}; localStorage.setItem('settings', JSON.stringify(settings)); iggers();">Revert to Default Settings</button><br><br>
 			<small id="mc-version"></small>
 		</div>
 		<div id="main-inbox" class="hidden">
@@ -479,14 +479,12 @@ function stgsTriggers() {
 		};
 		if (settings.post_color) {
 			document.querySelectorAll(".post").forEach((e) => {
-				e.style.background = settings.post_color;
+				if (!e.classList.contains("ignorecolor")) {e.style.background = settings.post_color};
 			});
 			document.querySelector("#ms-dropdown").style.backgroundColor = settings.post_color;
 		};
 		if (settings.button_color) {
-			document.querySelectorAll("button").forEach((e) => {
-				e.style.background = settings.button_color;
-			});
+			document.querySelectorAll("button").forEach((e) => {e.style.background = settings.button_color});
 		};
 		if (settings.msg_notif) {
 			msg_notif = true;
@@ -990,7 +988,7 @@ function loadPost(resf, isFetch, isInbox) {
 		postDetails.innerHTML = `${DOMPurify.sanitize(sts)}`;
 	} else {
 		if (resf.author.username == localStorage.getItem("username")) {
-			postDetails.innerHTML = `${DOMPurify.sanitize(sts)} | <span class="text-clickable" onclick="reply('${resf._id}', '${resf.content.replaceAll("\n", "\\n").replaceAll("<br>", "\\n").replaceAll("'", "\\'").replaceAll('"', '')}');">Reply</span> | <span class="text-clickable" onclick="deletePost('${resf._id}');">Delete</span> | <span class="text-clickable" onclick="document.querySelector('#ms-post-edit${count}').style.display = 'block'; document.querySelector('#ms-edit-confirm${count}').style.display = 'block';">Edit</span>`;
+			postDetails.innerHTML = `${DOMPurify.sanitize(sts)} | <span class="text-clickable" onclick="reply('${resf._id}', '${resf.content.replaceAll("\n", "\\n").replaceAll("<br>", "\\n").replaceAll("'", "\\'").replaceAll('"', '')}');">Reply</span> | <span class="text-clickable" onclick="deletePost('${resf._id}');">Delete</span> | <span class="text-clickable" onclick="document.querySelector('#ms-post-edit${count}').style.display = 'block'; document.querySelector('#ms-edit-confirm${count}').style.display = 'block'; document.querySelector('#ms-post-edit${count}').focus()">Edit</span>`;
 		} else {
 			postDetails.innerHTML = `${DOMPurify.sanitize(sts)} | <span class="text-clickable" onclick="reply('${resf._id}', '${resf.content.replaceAll("\n", "\\n").replaceAll("<br>", "\\n").replaceAll("'", "\\'").replaceAll('"', '')}');">Reply</span>`;
 		}
@@ -1029,6 +1027,7 @@ function loadPost(resf, isFetch, isInbox) {
 	postEdit.oninput = textinput();
 	postEdit.autocomplete = "off";
 	postEdit.placeholder = "Enter new post contents here...";
+	postEdit.value = resf.content
 	postEdit.type = "text";
 	var editSend = document.createElement("button");
 	editSend.innerHTML = "Confirm";
@@ -1036,7 +1035,7 @@ function loadPost(resf, isFetch, isInbox) {
 	editSend.id = `ms-edit-confirm${count}`;
 	const current = "#" + postEdit.id;
 	const current2 = "#" + editSend.id;
-	editSend.onclick = () => {console.log(current); document.querySelector(current).style.display = "none"; document.querySelector(current2).style.display = "none"; editPost(resf._id, document.querySelector(current).value)};
+	editSend.onclick = () => {document.querySelector(current).style.display = "none"; document.querySelector(current2).style.display = "none"; editPost(resf._id, document.querySelector(current).value)};
 	postEdit.onkeydown = () => {if (event.keyCode == 13) {if (event.shiftKey) {document.querySelector(current).value += '\\n'} else if (document.querySelector(current).value.length > 0) {document.querySelector(current).style.display = "none"; document.querySelector(current2).style.display = "none"; editPost(resf._id, document.querySelector(current).value)}}};
 	post.appendChild(postEdit);
 	post.appendChild(editSend);
@@ -1299,7 +1298,8 @@ function showReplies() {
 
 function removepost(id, dba) {
     try {
-        document.getElementById(id).style.backgroundColor = "#320000";
+        document.getElementById(id).style.setProperty("background-color", "#320000", "important");
+	document.getElementById(id).classList.add("ignorecolor");
         if (dba) {
             document.getElementById(id).innerHTML = sha512(document.getElementById(id).innerHTML) + "<br><small class='reply' style='vertical-align:top;'>post deleted by author</small>";
         } else {
@@ -1313,7 +1313,8 @@ function editedpost(id, content) {
 		document.getElementById(id).classList.remove("mewhenthemarkdownisparsed");
 		document.getElementById(id).innerHTML = "<del>" + document.getElementById(id).innerHTML + "</del><br>" + content;
 		document.getElementById(id).style.setProperty("background-color", "#323232", "important");
-		parseAllMarkdown();
+		document.getElementById(id).classList.add("ignorecolor");
+		setTimeout(parseAllMarkdown, 100);
 	} catch {console.log("failed to edit")};
 };
 		
