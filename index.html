@@ -714,8 +714,8 @@ ws.onmessage = (event) => {
 		loadPost(incoming.inbox[i], true, true);
 	    };
 	    if (localStorage.getItem("last_inbox_id") != incoming.inbox[0].id) {
-		document.getElementById("ms-button-inbox").innerText = "Inbox*";
-		localStorage.setItem("last_inbox_id", incoming.inbox[0].id)
+		document.getElementById("ms-button-inbox").innerText = "(!) Inbox";
+		localStorage.setItem("last_inbox_id", incoming.inbox[0]._id)
 	    } else {
 		document.getElementById("ms-button-inbox").innerText = "Inbox";
 	    };
