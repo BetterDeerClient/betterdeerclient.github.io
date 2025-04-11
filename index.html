@@ -1012,7 +1012,7 @@ function loadPost(resf, isFetch, isInbox) {
 	};
 
 	var postContent = document.createElement("span");
-	postContent.id = `ms-post-content`;
+	postContent.id = `ms-post-content${id}`;
 	if (!settings.blocked.includes(resf.author.username)) {
 		postContent.innerText = resf.content;
 	} else {
@@ -1027,7 +1027,7 @@ function loadPost(resf, isFetch, isInbox) {
 	postEdit.oninput = textinput();
 	postEdit.autocomplete = "off";
 	postEdit.placeholder = "Enter new post contents here...";
-	postEdit.value = resf.content
+	postEdit.value = resf.content;
 	postEdit.type = "text";
 	var editSend = document.createElement("button");
 	editSend.innerHTML = "Confirm";
@@ -1297,21 +1297,25 @@ function showReplies() {
 };
 
 function removepost(id, dba) {
-    try {
-        document.getElementById(id).style.setProperty("background-color", "#320000", "important");
-	document.getElementById(id).classList.add("ignorecolor");
-        if (dba) {
-            document.getElementById(id).innerHTML = sha512(document.getElementById(id).innerHTML) + "<br><small class='reply' style='vertical-align:top;'>post deleted by author</small>";
-        } else {
-            document.getElementById(id).innerHTML = sha512(document.getElementById(id).innerHTML) + "<br><small class='reply' style='vertical-align:top;'>post deleted by moderator</small>";
-        }
-    } catch {console.log("failed to delete")};
+	try {
+		document.getElementById(id).style.setProperty("background-color", "#320000", "important");
+		document.getElementById(id).classList.add("ignorecolor");
+		fakehash = []
+		for (let i = 0; i < 128; i++) {
+			fakehash.push(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"][Math.floor(Math.random()*16)]);
+		};
+		if (dba) {
+			document.getElementById(id).innerHTML = fakehash.join("") + "<br><small class='reply' style='vertical-align:top;'>post deleted by author</small>";
+		} else {
+			document.getElementById(id).innerHTML = fakehash.join("") + "<br><small class='reply' style='vertical-align:top;'>post deleted by moderator</small>";
+		}
+	} catch {console.log("failed to delete")};
 };
 		
 function editedpost(id, content) {
 	try {
-		document.getElementById(id).classList.remove("mewhenthemarkdownisparsed");
-		document.getElementById(id).innerHTML = "<del>" + document.getElementById(id).innerHTML + "</del><br>" + content;
+		document.getElementById(`ms-post-content${id}`).classList.remove("mewhenthemarkdownisparsed");
+		document.getElementById(`ms-post-content${id}`).innerHTML = content;
 		document.getElementById(id).style.setProperty("background-color", "#323232", "important");
 		document.getElementById(id).classList.add("ignorecolor");
 		setTimeout(parseAllMarkdown, 100);
