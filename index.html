@@ -618,13 +618,10 @@ async function uploadFile(file) {
         };
 };
 
-// whatever, go my ws shit
-
-const ws = new WebSocket("wss://sokt.fraudulent.loan") // what are you saying cole fuck you
+const ws = new WebSocket("wss://ws.soktdeer.com")
 		
 ws.onmessage = (event) => {
 	let incoming = JSON.parse(event.data);
-	console.log(incoming);
 	switch (incoming.command) {
 		case "greet":
 			closeErrors();
