@@ -1010,7 +1010,7 @@ function loadPost(resf, isFetch, isInbox) {
 
 	var postContent = document.createElement("span");
 	postContent.id = `ms-post-content${id}`;
-	postContent.class = "postcontent";
+	postContent.classList.add("postcontent");
 	if (!settings.blocked.includes(resf.author.username)) {
 		postContent.innerText = resf.content;
 	} else {
