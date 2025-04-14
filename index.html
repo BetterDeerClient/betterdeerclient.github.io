@@ -1010,6 +1010,7 @@ function loadPost(resf, isFetch, isInbox) {
 
 	var postContent = document.createElement("span");
 	postContent.id = `ms-post-content${id}`;
+	postContent.class = "postcontent";
 	if (!settings.blocked.includes(resf.author.username)) {
 		postContent.innerText = resf.content;
 	} else {
@@ -1127,7 +1128,7 @@ function parseAllMarkdown() {
 	];
 	const divs = document.querySelectorAll('.post');
 	divs.forEach((div) => {
-		const post = div.querySelector('#ms-post-content');
+		const post = div.querySelector('.postcontent');
 		if (post && !post.classList.contains("mewhenthemarkdownisparsed")) {
 			let html = DOMPurify.sanitize(post.innerHTML).replace(/style ?=/g, "");
 			regexs.forEach(([regex, sub]) => {
